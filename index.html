@@ -157,6 +157,7 @@ function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
 var draft=lsGet(LS_DRAFT), unsynced=false;
 if(draft&&draft.baseRev===EMBED_REV&&draft.state){state=draft.state;unsynced=true}
+var oldDraft=(draft&&draft.state&&draft.baseRev!==EMBED_REV)?draft:null;
 var ui=lsGet(LS_UI)||{};
 var tab=ui.tab||state.pages[0].id, hintOff=!!ui.hintOff;
 var expanded={};
@@ -219,6 +220,7 @@ function render(){
     h+='<button class="tab" role="tab" data-tab="'+p.id+'" aria-selected="'+(p.id===tab)+'" style="--tc:var(--'+p.color+')"><b>'+esc(big)+'</b><span>'+esc(small)+'</span></button>';
   });
   h+='</div></div></header><main class="wrap">';
+  if(oldDraft)h+='<div class="hint" style="flex-wrap:wrap"><span>行程有新版本了。你之前在這支手機上的修改還保留著，要用哪一份？</span><span style="display:flex;gap:12px"><button data-act="keep-mine">用我修改過的</button><button data-act="take-new">換成新版</button></span></div>';
   if(!hintOff)h+='<div class="hint"><span>長按任何項目、標題就能編輯；點一下看說明、地址和連結。</span><button data-act="hint-off">知道了</button></div>';
   h+='<section class="dayhead" data-lp="page:'+page.id+'" tabindex="0">';
   if(page.kind==='day')h+='<div class="date">'+esc(page.date)+'<small>'+esc(page.en)+' · 週'+esc(page.dow)+'</small></div>';
@@ -272,6 +274,8 @@ app.addEventListener('click',function(e){
   if(a){
     var act=a.dataset.act;
     if(act==='hint-off'){hintOff=true;saveUi();render()}
+    else if(act==='keep-mine'){state=oldDraft.state;oldDraft=null;lsSet(LS_DRAFT,{baseRev:EMBED_REV,state:state});render();toast('已換回你修改過的版本')}
+    else if(act==='take-new'){oldDraft=null;try{localStorage.removeItem(LS_DRAFT)}catch(err){}render();toast('已換成新版')}
     else if(act==='edit')openEditor('item:'+a.dataset.id);
     else if(act==='add')openEditor('new:'+a.dataset.group);
     return;
