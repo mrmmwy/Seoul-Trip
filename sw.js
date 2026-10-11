@@ -1,5 +1,5 @@
 // 離線快取：第一次打開時存下頁面，之後沒網路也能用
-const CACHE = 'seoul-trip-v23';
+const CACHE = 'seoul-trip-v24';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
