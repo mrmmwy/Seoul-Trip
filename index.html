@@ -264,6 +264,10 @@ app.addEventListener('pointerdown',function(e){
 app.addEventListener('pointermove',function(e){if(lp.t&&(Math.abs(e.clientX-lp.x)>10||Math.abs(e.clientY-lp.y)>10))lpCancel()});
 ['pointerup','pointercancel','pointerleave'].forEach(function(n){app.addEventListener(n,lpCancel)});
 window.addEventListener('scroll',lpCancel,{passive:true});
+var lpGuard=0;
+app.addEventListener('touchend',function(e){if(lp.fired){e.preventDefault();lpGuard=Date.now()+450}},{passive:false});
+document.addEventListener('click',function(e){if(Date.now()<lpGuard&&e.target.closest&&e.target.closest('#sheet,#scrim')){e.preventDefault();e.stopPropagation()}},true);
+document.addEventListener('focusin',function(e){if(Date.now()<lpGuard&&e.target.closest&&e.target.closest('#sheet')){e.target.blur()}},true);
 app.addEventListener('contextmenu',function(e){if(e.target.closest('[data-lp]')&&!e.target.closest('.detail'))e.preventDefault()});
 
 app.addEventListener('click',function(e){
