@@ -230,7 +230,7 @@ a.launched{visibility:hidden}
 .fxsheet.stuck{pointer-events:auto}
 .fxsheet.stuck .fb{opacity:1;transform:none}
 
-/* Liquid glass: a fixed aurora tinted by the day color sits behind everything; surfaces are translucent and blurred with a soft top highlight; rims are kept faint and colors muted */
+/* Liquid glass on a plain background: translucent surfaces with a soft top highlight and faint rims; only the sticky app bar blurs, since content scrolls beneath it */
 :root{
   --bg:#ECF0F1;
   --g-fill:rgba(255,255,255,.55); --g-chip:rgba(255,255,255,.5); --g-sheen:rgba(255,255,255,.4);
@@ -238,7 +238,6 @@ a.launched{visibility:hidden}
   --g-line:rgba(23,32,29,.09);
   --g-drop:0 8px 24px -14px rgba(22,34,30,.22),0 1px 4px -2px rgba(22,34,30,.08);
   --g-btn:0 3px 10px -7px rgba(22,34,30,.3);
-  --au-day:26%; --au-a:#9CC9E6; --au-b:#E8C3CE; --au-c:#C7E3D6; --au-mix:30%;
   --hero-mute:#6E7674;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
@@ -248,7 +247,6 @@ a.launched{visibility:hidden}
   --g-line:rgba(233,238,236,.09);
   --g-drop:0 10px 26px -14px rgba(0,0,0,.6),0 1px 4px -2px rgba(0,0,0,.35);
   --g-btn:0 3px 10px -7px rgba(0,0,0,.6);
-  --au-day:20%; --au-a:#2B5577; --au-b:#5E3A4D; --au-c:#2D5447; --au-mix:26%;
   --hero-mute:#3A403E}}
 :root[data-theme="dark"]{
   --bg:#0B0F0E;
@@ -257,25 +255,9 @@ a.launched{visibility:hidden}
   --g-line:rgba(233,238,236,.09);
   --g-drop:0 10px 26px -14px rgba(0,0,0,.6),0 1px 4px -2px rgba(0,0,0,.35);
   --g-btn:0 3px 10px -7px rgba(0,0,0,.6);
-  --au-day:20%; --au-a:#2B5577; --au-b:#5E3A4D; --au-c:#2D5447; --au-mix:26%;
   --hero-mute:#3A403E}
-/* browsers without backdrop blur get near-solid surfaces so text stays readable */
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  :root:root:root{--g-fill:color-mix(in srgb,var(--surface) 94%,transparent);--g-chip:var(--chip)}
-}
 
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:
-    radial-gradient(65% 45% at 0% 0%,color-mix(in srgb,var(--day) var(--au-day),transparent),transparent 72%),
-    radial-gradient(60% 42% at 100% 22%,color-mix(in srgb,var(--au-a) var(--au-mix),transparent),transparent 72%),
-    radial-gradient(70% 45% at 15% 70%,color-mix(in srgb,var(--au-b) var(--au-mix),transparent),transparent 72%),
-    radial-gradient(60% 45% at 100% 100%,color-mix(in srgb,var(--day) var(--au-day),transparent),transparent 72%),
-    radial-gradient(55% 35% at 55% 45%,color-mix(in srgb,var(--au-c) var(--au-mix),transparent),transparent 75%)}
 
-/* page slide: transform only, so the glass keeps blurring while it moves */
-@keyframes fadeUp{from{transform:translateY(8px)}to{transform:none}}
-@keyframes slideR{from{transform:translateX(28px)}to{transform:none}}
-@keyframes slideL{from{transform:translateX(-28px)}to{transform:none}}
 
 /* app bar */
 .top{background:color-mix(in srgb,var(--bg) 55%,transparent);-webkit-backdrop-filter:blur(24px) saturate(125%);backdrop-filter:blur(24px) saturate(125%);border-bottom:0;box-shadow:inset 0 -1px 0 var(--g-line)}
@@ -285,14 +267,14 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 .tab[aria-selected="true"]{background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 55%),color-mix(in srgb,var(--tc) 88%,var(--hero-mute));box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 5px 14px -8px color-mix(in srgb,var(--tc) 55%,transparent)}
 
 /* glass surfaces */
-.notice,.next,.note,.card{background:linear-gradient(180deg,var(--g-sheen) 0%,transparent 40%),var(--g-fill);-webkit-backdrop-filter:blur(20px) saturate(120%);backdrop-filter:blur(20px) saturate(120%);box-shadow:inset 0 1px 0 var(--g-spec),inset 0 0 0 1px var(--g-rim),var(--g-drop)}
+.notice,.next,.note,.card{background:linear-gradient(180deg,var(--g-sheen) 0%,transparent 40%),var(--g-fill);box-shadow:inset 0 1px 0 var(--g-spec),inset 0 0 0 1px var(--g-rim),var(--g-drop)}
 .ti[aria-expanded="true"] .card{box-shadow:inset 0 1px 0 var(--g-spec),inset 0 0 0 1.5px color-mix(in srgb,var(--day) 45%,transparent),var(--g-drop)}
 .group.alt .card{background:var(--g-chip);box-shadow:inset 0 1px 0 var(--g-spec),inset 0 0 0 1px var(--g-rim)}
 .detail{border-top-color:var(--g-line)}
 .next .ic{background:color-mix(in srgb,var(--day) 13%,transparent)}
 
 /* hero: tinted glass, slightly muted, with a soft sheen */
-.hero{background:radial-gradient(120% 85% at 8% -15%,rgba(255,255,255,.26),rgba(255,255,255,0) 55%),linear-gradient(140deg,color-mix(in srgb,color-mix(in srgb,color-mix(in srgb,var(--day) var(--hk1),#000) 82%,var(--hero-mute)) 88%,transparent) 0%,color-mix(in srgb,color-mix(in srgb,color-mix(in srgb,var(--day) var(--hk2),#000) 82%,var(--hero-mute)) 80%,transparent) 100%);-webkit-backdrop-filter:blur(24px) saturate(115%);backdrop-filter:blur(24px) saturate(115%);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 14px 30px -18px color-mix(in srgb,var(--day) 45%,transparent)}
+.hero{background:radial-gradient(120% 85% at 8% -15%,rgba(255,255,255,.26),rgba(255,255,255,0) 55%),linear-gradient(140deg,color-mix(in srgb,color-mix(in srgb,color-mix(in srgb,var(--day) var(--hk1),#000) 82%,var(--hero-mute)) 88%,transparent) 0%,color-mix(in srgb,color-mix(in srgb,color-mix(in srgb,var(--day) var(--hk2),#000) 82%,var(--hero-mute)) 80%,transparent) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 14px 30px -18px color-mix(in srgb,var(--day) 45%,transparent)}
 .hero.prep{background:radial-gradient(120% 85% at 8% -15%,rgba(255,255,255,.24),rgba(255,255,255,0) 55%),linear-gradient(140deg,rgba(86,99,94,.88),rgba(46,54,51,.82))}
 
 /* timeline */
