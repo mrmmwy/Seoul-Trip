@@ -1,8 +1,7 @@
 // 離線快取：第一次打開時存下頁面，之後沒網路也能用
-const CACHE = 'seoul-trip-v40';
+const CACHE = 'seoul-trip-v41';
 const FONTS = 'seoul-trip-fonts'; // 字型另外存，App 改版時不用重新下載
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
-const WAIT = 3000; // 網路太慢時，最多等這麼久就先顯示快取的版本
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
@@ -19,7 +18,7 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   const isFont = /fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
   if (url.origin !== location.origin && !isFont) return;
-  // 頁面：有網路一律向伺服器確認最新版（不用瀏覽器暫存）；沒網路或等超過 WAIT 就先用快取，新版在背景存好，下次打開就是新版
+  // 頁面：有網路一律等伺服器回應最新版（不用瀏覽器暫存），再慢也等；完全連不上才用快取
   if (req.mode === 'navigate') {
     const net = fetch(req.url, { cache: 'no-cache' });
     e.waitUntil(net.then(res => {
@@ -27,14 +26,9 @@ self.addEventListener('fetch', e => {
       const copy = res.clone(); // 要在頁面讀取內容之前複製
       return caches.open(CACHE).then(c => c.put('./index.html', copy));
     }).catch(() => {}));
-    e.respondWith(new Promise(resolve => {
-      let done = false;
-      const finish = res => { if (!done && res) { done = true; resolve(res); } };
-      const cached = () => caches.match('./index.html');
-      const timer = setTimeout(() => cached().then(finish), WAIT);
-      net.then(res => { clearTimeout(timer); finish(res); })
-        .catch(() => { clearTimeout(timer); cached().then(hit => finish(hit || Response.error())); });
-    }));
+    const cached = () => caches.match('./index.html');
+    // 伺服器回錯誤（例如 GitHub 暫時故障）也改用快取
+    e.respondWith(net.then(res => res.ok ? res : cached().then(hit => hit || res), () => cached().then(hit => hit || Response.error())));
     return;
   }
   // 字型與圖示：先用快取
