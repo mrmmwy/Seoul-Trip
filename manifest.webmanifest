@@ -1,6 +1,6 @@
 {
-  "name": "首爾六日行程",
-  "short_name": "首爾行程",
+  "name": "Seoul-Trip",
+  "short_name": "Seoul-Trip",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
