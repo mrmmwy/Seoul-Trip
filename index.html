@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F2F4F3" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0F1312" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EAF0F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A0E0D" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -229,6 +229,84 @@ a.launched{visibility:hidden}
 .fxsheet .fb button{background:rgba(255,255,255,.18);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
 .fxsheet.stuck{pointer-events:auto}
 .fxsheet.stuck .fb{opacity:1;transform:none}
+
+/* Liquid glass: a fixed aurora tinted by the day color sits behind everything; surfaces are translucent, blurred and saturated, with a specular top highlight and a thin bright rim */
+:root{
+  --bg:#EAF0F2;
+  --g-fill:rgba(255,255,255,.5); --g-chip:rgba(255,255,255,.46); --g-sheen:rgba(255,255,255,.55);
+  --g-spec:rgba(255,255,255,.95); --g-edge:rgba(255,255,255,.45); --g-rim:rgba(255,255,255,.62);
+  --g-line:rgba(23,32,29,.1);
+  --g-drop:0 10px 28px -12px rgba(22,34,30,.26),0 2px 6px -3px rgba(22,34,30,.1);
+  --au-day:46%; --au-a:#7CC8FF; --au-b:#FFB3C7; --au-c:#B9F0D7; --au-mix:42%;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A0E0D;
+  --g-fill:rgba(32,40,38,.42); --g-chip:rgba(255,255,255,.08); --g-sheen:rgba(255,255,255,.08);
+  --g-spec:rgba(255,255,255,.3); --g-edge:rgba(255,255,255,.08); --g-rim:rgba(255,255,255,.13);
+  --g-line:rgba(233,238,236,.1);
+  --g-drop:0 12px 30px -12px rgba(0,0,0,.65),0 2px 6px -3px rgba(0,0,0,.4);
+  --au-day:34%; --au-a:#1F5FA0; --au-b:#7A2E58; --au-c:#1E6B55; --au-mix:38%}}
+:root[data-theme="dark"]{
+  --bg:#0A0E0D;
+  --g-fill:rgba(32,40,38,.42); --g-chip:rgba(255,255,255,.08); --g-sheen:rgba(255,255,255,.08);
+  --g-spec:rgba(255,255,255,.3); --g-edge:rgba(255,255,255,.08); --g-rim:rgba(255,255,255,.13);
+  --g-line:rgba(233,238,236,.1);
+  --g-drop:0 12px 30px -12px rgba(0,0,0,.65),0 2px 6px -3px rgba(0,0,0,.4);
+  --au-day:34%; --au-a:#1F5FA0; --au-b:#7A2E58; --au-c:#1E6B55; --au-mix:38%}
+/* browsers without backdrop blur get near-solid surfaces so text stays readable */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  :root:root:root{--g-fill:color-mix(in srgb,var(--surface) 94%,transparent);--g-chip:var(--chip)}
+}
+
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(65% 45% at 0% 0%,color-mix(in srgb,var(--day) var(--au-day),transparent),transparent 72%),
+    radial-gradient(60% 42% at 100% 22%,color-mix(in srgb,var(--au-a) var(--au-mix),transparent),transparent 72%),
+    radial-gradient(70% 45% at 15% 70%,color-mix(in srgb,var(--au-b) var(--au-mix),transparent),transparent 72%),
+    radial-gradient(60% 45% at 100% 100%,color-mix(in srgb,var(--day) var(--au-day),transparent),transparent 72%),
+    radial-gradient(55% 35% at 55% 45%,color-mix(in srgb,var(--au-c) var(--au-mix),transparent),transparent 75%)}
+
+/* page slide: transform only, so the glass keeps blurring while it moves */
+@keyframes fadeUp{from{transform:translateY(8px)}to{transform:none}}
+@keyframes slideR{from{transform:translateX(28px)}to{transform:none}}
+@keyframes slideL{from{transform:translateX(-28px)}to{transform:none}}
+
+/* app bar */
+.top{background:color-mix(in srgb,var(--bg) 40%,transparent);-webkit-backdrop-filter:blur(26px) saturate(190%);backdrop-filter:blur(26px) saturate(190%);border-bottom:0;box-shadow:inset 0 -1px 0 var(--g-rim),0 10px 24px -18px rgba(0,0,0,.45)}
+.logo{box-shadow:inset 0 1px 1px rgba(255,255,255,.6),0 2px 6px rgba(0,0,0,.22)}
+.trip{background:linear-gradient(180deg,var(--g-sheen),transparent 70%),color-mix(in srgb,var(--day) 14%,transparent);box-shadow:inset 0 1px 1px var(--g-spec),inset 0 0 0 1px var(--g-rim)}
+.tab{background:linear-gradient(180deg,var(--g-sheen),transparent 62%),var(--g-chip);box-shadow:inset 0 1px 1px var(--g-spec),inset 0 -1px 1px var(--g-edge),inset 0 0 0 1px var(--g-rim),0 4px 12px -8px rgba(0,0,0,.35)}
+.tab[aria-selected="true"]{background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0) 58%),color-mix(in srgb,var(--tc) 86%,transparent);box-shadow:inset 0 1px 1px rgba(255,255,255,.75),inset 0 -3px 8px rgba(0,0,0,.14),inset 0 0 0 1px rgba(255,255,255,.3),0 8px 18px -8px var(--tc)}
+
+/* glass surfaces */
+.notice,.next,.note,.card{background:linear-gradient(180deg,var(--g-sheen) 0%,transparent 42%),var(--g-fill);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:inset 0 1px 1px var(--g-spec),inset 0 -1px 1px var(--g-edge),inset 0 0 0 1px var(--g-rim),var(--g-drop)}
+.ti[aria-expanded="true"] .card{box-shadow:inset 0 1px 1px var(--g-spec),inset 0 -1px 1px var(--g-edge),inset 0 0 0 1.5px color-mix(in srgb,var(--day) 60%,transparent),0 14px 32px -14px color-mix(in srgb,var(--day) 55%,transparent),var(--g-drop)}
+.group.alt .card{background:linear-gradient(180deg,var(--g-sheen) 0%,transparent 42%),var(--g-chip);box-shadow:inset 0 1px 1px var(--g-spec),inset 0 0 0 1px var(--g-rim)}
+.detail{border-top-color:var(--g-line)}
+.next .ic{background:linear-gradient(180deg,var(--g-sheen),transparent 70%),color-mix(in srgb,var(--day) 16%,transparent);box-shadow:inset 0 1px 1px var(--g-spec),inset 0 0 0 1px var(--g-rim)}
+
+/* hero: tinted glass with a glossy sheen */
+.hero{background:radial-gradient(120% 85% at 8% -15%,rgba(255,255,255,.42),rgba(255,255,255,0) 55%),linear-gradient(140deg,color-mix(in srgb,color-mix(in srgb,var(--day) var(--hk1),#000) 86%,transparent) 0%,color-mix(in srgb,color-mix(in srgb,var(--day) var(--hk2),#000) 76%,transparent) 100%);-webkit-backdrop-filter:blur(24px) saturate(170%);backdrop-filter:blur(24px) saturate(170%);box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -1px 1px rgba(255,255,255,.18),inset 0 0 0 1px rgba(255,255,255,.22),0 18px 38px -16px color-mix(in srgb,var(--day) 65%,transparent)}
+.hero.prep{background:radial-gradient(120% 85% at 8% -15%,rgba(255,255,255,.38),rgba(255,255,255,0) 55%),linear-gradient(140deg,rgba(86,99,94,.88),rgba(46,54,51,.8))}
+.hero .eyebrow .tp{box-shadow:inset 0 1px 1px rgba(255,255,255,.5)}
+
+/* timeline */
+.tl.rail::before{background:linear-gradient(180deg,transparent,var(--g-line) 6%,var(--g-line) 94%,transparent);width:2px}
+.ti-node{background:linear-gradient(180deg,var(--g-sheen),transparent 70%),var(--g-fill);box-shadow:0 0 0 2px var(--day),inset 0 1px 1px var(--g-spec),0 3px 8px -2px color-mix(in srgb,var(--day) 50%,transparent)}
+.ti.key .ti-node{background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0) 60%),var(--day)}
+.rtag{background:linear-gradient(180deg,var(--g-sheen),transparent 70%),color-mix(in srgb,var(--day) 12%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--day) 22%,transparent)}
+
+/* chips and buttons */
+.act,.ghead .tg{background:linear-gradient(180deg,var(--g-sheen),transparent 62%),var(--g-chip);box-shadow:inset 0 1px 1px var(--g-spec),inset 0 -1px 1px var(--g-edge),inset 0 0 0 1px var(--g-rim),0 4px 12px -8px rgba(0,0,0,.35)}
+.act.nv,.recs a{background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,0) 56%),#03C75A;box-shadow:inset 0 1px 1px rgba(255,255,255,.65),inset 0 -2px 6px rgba(0,70,30,.2),0 6px 14px -6px rgba(3,199,90,.6)}
+.act.ig{background:linear-gradient(180deg,rgba(255,255,255,.36),rgba(255,255,255,0) 56%),linear-gradient(45deg,#F58529,#DD2A7B 55%,#8134AF);box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -2px 6px rgba(60,0,40,.2),0 6px 14px -6px rgba(221,42,123,.6)}
+.act.on{background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0) 56%),var(--day);box-shadow:inset 0 1px 1px rgba(255,255,255,.7),inset 0 -2px 6px rgba(0,0,0,.15),0 6px 14px -6px var(--day)}
+.act.ghost{background:none;box-shadow:inset 0 0 0 1px var(--g-rim)}
+.recs{background:linear-gradient(180deg,var(--g-sheen),transparent 30%),var(--g-chip);box-shadow:inset 0 1px 1px var(--g-spec),inset 0 0 0 1px var(--g-rim)}
+.recs li{border-top-color:var(--g-line)}
+.progress{background:var(--g-chip);box-shadow:inset 0 1px 2px rgba(0,0,0,.12),inset 0 0 0 1px var(--g-rim)}
+.progress i{background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0) 60%),var(--day)}
+.badge{background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0) 60%),var(--star)}
 </style>
 <div id="app"><noscript id="fallback"><header class="top"><div class="wrap"><div class="bar"><h1><i class="logo" aria-hidden="true"></i>首爾 6 日<small>10/26–31</small></h1><span class="trip">離線閱讀版</span></div><nav class="tabs"><a class="tab" href="#d26" style="--tc:var(--d1)"><b>26</b><span>週一</span></a><a class="tab" href="#d27" style="--tc:var(--d2)"><b>27</b><span>週二</span></a><a class="tab" href="#d28" style="--tc:var(--d3)"><b>28</b><span>週三</span></a><a class="tab" href="#d29" style="--tc:var(--d4)"><b>29</b><span>週四</span></a><a class="tab" href="#d30" style="--tc:var(--d5)"><b>30</b><span>週五</span></a><a class="tab" href="#d31" style="--tc:var(--d6)"><b>31</b><span>週六</span></a><a class="tab" href="#prep" style="--tc:var(--prep)"><b>✓</b><span>準備</span></a></nav></div></header><main class="wrap"><div class="notice"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><div class="txt">離線閱讀版：全部行程都在這一頁，往下滑或點上方日期跳轉。</div></div><div class="spage" id="d26" style="--day:var(--d1)"><section class="hero"><div class="eyebrow">DAY 1 · MON</div><div class="date">10/26</div><h2>抵達、入住、僑村炸雞</h2><div class="meta"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18V7M3 13h18v5M21 18v-3a3 3 0 0 0-3-3h-7v1"/></svg>東大門住宿</span><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>4 個行程</span></div><div class="wm" aria-hidden="true">동대문</div></section><div class="notes"><div class="note open"><button tabindex="-1"><svg class="i ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/></svg><b>提醒</b></button><ul><li>晚餐現場用餐，時間隨實際入境進度調整。</li></ul></div><div class="note open"><button tabindex="-1"><svg class="i ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M9 20l-2 1M15 20l2 1M8 16l-1 4M16 16l1 4"/></svg><b>交通</b></button><ul><li>抵達晚、帶行李，金浦 → 東大門住宿建議直接搭計程車（約 40–50 分）；省錢可搭地鐵 5 號線直達東大門歷史文化公園站。詳細步驟見「金浦機場 → 東大門住宿 交通教學」。</li></ul></div></div><section class="group"><div class="ghead"><h3>行程</h3><span class="cnt">4 項</span></div><ol class="tl rail"><li class="ti"><div class="ti-time"><b>19:45</b></div><div class="ti-node"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="14" r=".5"/><circle cx="15" cy="14" r=".5"/></svg></div><div class="card"><div class="row1"><div class="title"><span>抵達金浦機場國際線</span></div></div><div class="ko">김포공항 국제선</div><div class="detail"><p>入境、領行李預留約 60–90 分鐘。</p><div class="addr"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>서울 강서구 하늘길 38</span></div><div class="acts"><a class="act nv" href="https://map.naver.com/p/entry/place/18952275" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>NAVER 地圖</a></div></div></div></li><li class="ti"><div class="ti-time"><span>約</span><b>21:00</b></div><div class="ti-node"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="14" r=".5"/><circle cx="15" cy="14" r=".5"/></svg></div><div class="card"><div class="row1"><div class="title"><span>金浦機場 → 東大門住宿 交通教學</span></div></div><div class="sub">計程車（建議）或地鐵 5 號線</div><div class="ko">서울 중구 을지로41길 22</div><div class="detail"><p>建議：抵達晚又帶行李，直接搭計程車最省事；想省錢可搭地鐵 5 號線，一班車直達（方案 B）。
 
@@ -533,7 +611,7 @@ function launchFx(a,e,kind){
   f.style.cssText='left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;height:'+r.height+'px';
   f.innerHTML='<span class="pill"></span><span class="lbl">'+a.innerHTML+'</span>'+cfg.ride;
   var pill=f.querySelector('.pill'),lbl=f.querySelector('.lbl'),ride=f.querySelector('.ride');
-  pill.style.background=cs.backgroundImage!=='none'?cs.backgroundImage:cs.backgroundColor;pill.style.borderRadius=rad;
+  pill.style.backgroundColor=cs.backgroundColor;pill.style.backgroundImage=cs.backgroundImage;pill.style.boxShadow=cs.boxShadow;pill.style.borderRadius=rad;
   lbl.style.color=cs.color;lbl.style.fontSize=cs.fontSize;lbl.style.fontWeight=cs.fontWeight;
   ride.style.width=cfg.w+'px';ride.style.height=cfg.h+'px';
   document.body.appendChild(f);a.classList.add('launched');
