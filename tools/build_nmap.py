@@ -1,4 +1,4 @@
-# 查出 index.html 裡每個 NAVER 地圖連結的名稱與座標，寫成 NMAP 對照表，讓 App 能直接用 nmap:// 打開
+# 查出 index.html 裡每個 NAVER 地圖連結的名稱、座標與地點編號，寫成 NMAP 對照表，讓手機能用 nmap:// 直接打開 App 的地點頁
 # 用法：python tools/build_nmap.py   （只會查表裡還沒有的地點）
 import html, json, re, sys, time, urllib.parse, urllib.request
 from pathlib import Path
@@ -42,7 +42,8 @@ def from_query(url):
     if "stationId" in q:
         return STATIONS.get(q["stationId"][0])
     if "lat" in q and "lng" in q:
-        return [float(q["lat"][0]), float(q["lng"][0]), q.get("title", [""])[0]]
+        v = [float(q["lat"][0]), float(q["lng"][0]), q.get("title", [""])[0]]
+        return v + [q["pinId"][0]] if "pinId" in q else v
     return None
 
 
