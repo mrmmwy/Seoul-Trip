@@ -17,3 +17,4 @@
 - `manifest.webmanifest`：App 名稱與圖示設定
 - `sw.js`：離線快取
 - `icon-*.png`：主畫面圖示
+- `tools/build_nmap.py`：新增 NAVER 地圖連結後執行一次，查出地點座標，讓手機能直接打開 NAVER Map App
