@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1E7880">
+<meta name="theme-color" content="#F2F4F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1312" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -16,7 +17,7 @@
 <title>首爾六日行程</title>
 <link id="font-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
 <style id="app-style">
-/* Layout: phone-first travel companion — app bar with trip countdown, day strip, colored day hero, collapsible notes, vertical timeline with type nodes, bottom-sheet editor (long press) */
+/* Layout: phone-first read-only travel companion — app bar with logo and trip countdown, day strip, colored day hero, collapsible notes, vertical timeline with type nodes; cards spring open on tap */
 :root{
   --bg:#F2F4F3; --surface:#FFFFFF; --surface2:#F7F9F8; --fg:#17201D; --muted:#5D6A65; --line:#E1E6E3; --chip:#EBEFED;
   --d1:#C2542D; --d2:#2F7A4F; --d3:#1B7A82; --d4:#4B4FA3; --d5:#2A68A6; --d6:#9A6B12; --prep:#56635E;
@@ -51,14 +52,10 @@ svg.i{width:18px;height:18px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-
 /* app bar + day strip */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px 4px}
-.bar h1{margin:0;font-size:17px;font-weight:900;letter-spacing:.01em;display:flex;align-items:baseline;gap:8px;min-width:0}
+.bar h1{margin:0;font-size:17px;font-weight:900;letter-spacing:.01em;display:flex;align-items:center;gap:8px;min-width:0}
+.logo{width:30px;height:30px;border-radius:50%;flex:0 0 auto;background:#5BBCE8 url("data:image/png;base64,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") center/cover;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .bar h1 small{font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap}
 .trip{font-size:12px;font-weight:700;color:var(--day);background:color-mix(in srgb,var(--day) 12%,transparent);border-radius:999px;padding:3px 10px;white-space:nowrap}
-.status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;white-space:nowrap}
-.status i{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block}
-.status[data-s="dirty"] i,.status[data-s="saving"] i{background:var(--star)}
-.status[data-s="local"] i{background:var(--muted)}
-.status[data-s="error"] i{background:var(--danger)}
 .tabs{display:flex;gap:6px;overflow-x:auto;padding-block:8px 10px;scrollbar-width:none;scroll-snap-type:x proximity}
 .tabs::-webkit-scrollbar{display:none}
 .tab{position:relative;flex:1 0 46px;scroll-snap-align:center;border:0;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);border-radius:14px;padding:6px 0 7px;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;transition:background .2s,color .2s,transform .15s}
@@ -83,7 +80,6 @@ main{padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
 .notice .txt{flex:1;min-width:0}
 .notice .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .notice button{border:0;background:none;color:var(--day);font-weight:700;font-size:13px;padding:6px 2px;min-height:32px}
-.notice .pill{background:var(--day);color:var(--ink);border-radius:999px;padding:6px 14px}
 
 /* hero */
 .hero{position:relative;overflow:hidden;margin-top:14px;border-radius:var(--r-lg);padding:18px 18px 16px;color:#fff;background:#2E3633;background:linear-gradient(140deg,color-mix(in srgb,var(--day) var(--hk1),#000) 0%,color-mix(in srgb,var(--day) var(--hk2),#000) 100%);box-shadow:var(--shadow);user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -146,7 +142,8 @@ main{padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
 .ti.past{opacity:.55}
 .ti.nowi .ti-node{animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--day) 25%,transparent)}}
-.card{position:relative;min-width:0;background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow);padding:12px 14px;cursor:pointer;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.card{position:relative;min-width:0;background:var(--surface);border-radius:var(--r-md);box-shadow:var(--shadow);padding:12px 14px;cursor:pointer;overflow:hidden;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+.card:active{transform:scale(.97)}
 .ti[aria-expanded="true"] .card{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--day) 55%,transparent),var(--shadow)}
 .group.alt .card{background:var(--surface2);box-shadow:inset 0 0 0 1px var(--line)}
 .card .row1{display:flex;align-items:flex-start;gap:8px}
@@ -160,11 +157,9 @@ main{padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
 .rtag svg{width:14px;height:14px}
 .chk{width:22px;height:22px;accent-color:var(--day);flex:0 0 auto;margin:1px 0 0}
 .ti.done .card .title span{text-decoration:line-through;color:var(--muted)}
-.detail{font-size:14px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;user-select:text;-webkit-user-select:text;cursor:auto;animation:fadeUp .22s ease both}
+.detail{font-size:14px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px;user-select:text;-webkit-user-select:text;cursor:auto}
 .detail p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .detail .mynote{background:color-mix(in srgb,var(--star) 12%,transparent);border-radius:var(--r-sm);padding:8px 10px}
-.addr{display:flex;gap:6px;align-items:flex-start;font-size:13px;color:var(--muted);overflow-wrap:anywhere}
-.addr svg{width:15px;height:15px;margin-top:3px}
 .acts{display:flex;flex-wrap:wrap;gap:8px}
 .act{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;border:0;background:var(--chip);color:var(--fg);font-size:13px;font-weight:700;text-decoration:none}
 .act svg{width:16px;height:16px}
@@ -172,7 +167,7 @@ main{padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
 .act.ig{background:linear-gradient(45deg,#F58529,#DD2A7B 55%,#8134AF);color:#fff}
 .act.on{background:var(--day);color:var(--ink)}
 .act.ghost{background:none;box-shadow:inset 0 0 0 1px var(--line)}
-.recs{list-style:none;margin:0;padding:4px 0;background:var(--surface2);border-radius:var(--r-sm);display:flex;flex-direction:column;animation:fadeUp .22s ease both}
+.recs{list-style:none;margin:0;padding:4px 0;background:var(--surface2);border-radius:var(--r-sm);display:flex;flex-direction:column}
 .recs li{display:flex;gap:10px;align-items:center;padding:8px 12px;border-top:1px solid var(--line)}
 .recs li:first-child{border-top:0}
 .recs .rt{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -180,39 +175,27 @@ main{padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
 .recs span{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
 .recs a{flex:0 0 auto;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#03C75A;color:#fff}
 .recs a svg{width:17px;height:17px}
-.card::after,.hero::after,.ghead::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--day);transform:scaleX(0);transform-origin:left;pointer-events:none}
-.pressing .card::after,.pressing.hero::after,.pressing.ghead::after{transform:scaleX(1);transition:transform .5s linear}
-.pressing .card{transform:scale(.98)}
-.hero::after{background:rgba(255,255,255,.9);height:4px}
-.add{margin:8px 0 0 86px;width:calc(100% - 86px);display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px dashed var(--line);background:none;border-radius:var(--r-md);padding:10px;color:var(--muted);font-size:14px;min-height:44px}
-.tl:not(.rail)+.add{margin-left:0;width:100%}
-.add:hover{border-color:var(--day);color:var(--day)}
 .foot{color:var(--muted);font-size:12px;padding-block:28px 8px;text-align:center;line-height:1.8}
 .swipe-hint{font-size:11.5px;color:var(--muted);text-align:center;margin-top:10px}
 
-/* sheet + form */
-.scrim{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:20;animation:fade .2s ease both}
-@keyframes fade{from{opacity:0}}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--surface);border-radius:22px 22px 0 0;max-height:90%;overflow-y:auto;padding:8px 16px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 34px rgba(0,0,0,.2);animation:up .26s cubic-bezier(.2,.8,.2,1) both}
-@keyframes up{from{transform:translateY(40px);opacity:0}}
-.sheet .grab{width:42px;height:5px;border-radius:3px;background:var(--line);margin:4px auto 12px}
-.sheet h3{margin:0 0 12px;font-size:18px}
-.sheet .inner{max-width:640px;margin:0 auto}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fields .full{grid-column:1/-1}
-.f{display:flex;flex-direction:column;gap:4px;min-width:0}
-.f label{font-size:12px;font-weight:700;color:var(--muted)}
-.f input,.f select,.f textarea{width:100%;border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:10px 12px;font-size:16px}
-.f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--day);outline-offset:0;border-color:transparent}
-.f textarea{min-height:76px;resize:vertical}
-.f small{font-size:11.5px;color:var(--muted)}
-.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.btn{border:0;background:var(--chip);border-radius:12px;padding:0 16px;min-height:44px;font-size:14px;font-weight:700}
-.btn.primary{background:var(--day);color:var(--ink);margin-left:auto}
-.btn.danger{color:var(--danger);background:none;box-shadow:inset 0 0 0 1.5px var(--danger)}
-.btn[disabled]{opacity:.4;cursor:default}
-.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:999px;z-index:30;max-width:calc(100% - 32px);box-shadow:0 6px 20px rgba(0,0,0,.2);animation:up .2s ease both}
-@media (max-width:400px){.hero .date{font-size:50px}.fields{grid-template-columns:1fr}.ti{grid-template-columns:50px 22px 1fr}.tl.rail::before{left:68px}.add{margin-left:80px;width:calc(100% - 80px)}}
+@media (max-width:400px){.hero .date{font-size:50px}.ti{grid-template-columns:50px 22px 1fr}.tl.rail::before{left:68px}}
+
+
+/* bounce: tapped card springs, its content drops in with a small overshoot */
+.pop>.card,.note.pop,.pop-r .act.on,.group.pop .tg{animation:boing .55s cubic-bezier(.28,.84,.42,1) both}
+@keyframes boing{0%{transform:scale(.96)}35%{transform:scale(1.03)}60%{transform:scale(.99)}80%{transform:scale(1.006)}100%{transform:none}}
+.pop .detail,.pop-r .recs,.note.pop ul,.group.pop .tl{animation:drop .5s cubic-bezier(.34,1.56,.64,1) both;transform-origin:top center}
+@keyframes drop{0%{opacity:0;transform:translateY(-14px) scaleY(.9)}50%{opacity:1}100%{opacity:1;transform:none}}
+.pop .ti-node{animation:nodePop .5s cubic-bezier(.34,1.8,.64,1) both}
+@keyframes nodePop{0%{transform:scale(.5)}100%{transform:none}}
+.pop[aria-expanded="true"] .card .cv,.note.pop.open>button .cv{animation:cvOpen .45s cubic-bezier(.34,1.56,.64,1) both}
+.pop[aria-expanded="false"] .card .cv,.note.pop:not(.open)>button .cv{animation:cvClose .45s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes cvOpen{from{transform:rotate(0)}to{transform:rotate(180deg)}}
+@keyframes cvClose{from{transform:rotate(180deg)}to{transform:rotate(0)}}
+.act,.next,.note>button,.ghead .tg{transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.act:active,.next:active,.ghead .tg:active{transform:scale(.94)}
+.note>button:active{transform:scale(.98)}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
 a.tab{color:var(--fg);text-decoration:none}
@@ -220,7 +203,7 @@ a.tab{color:var(--fg);text-decoration:none}
 .spage .detail{animation:none}
 .spage .card{cursor:auto}
 </style>
-<div id="app"><header class="top"><div class="wrap"><div class="bar"><h1>首爾 6 日<small>10/26–31</small></h1><span class="trip">離線閱讀版</span></div><nav class="tabs"><a class="tab" href="#d26" style="--tc:var(--d1)"><b>26</b><span>週一</span></a><a class="tab" href="#d27" style="--tc:var(--d2)"><b>27</b><span>週二</span></a><a class="tab" href="#d28" style="--tc:var(--d3)"><b>28</b><span>週三</span></a><a class="tab" href="#d29" style="--tc:var(--d4)"><b>29</b><span>週四</span></a><a class="tab" href="#d30" style="--tc:var(--d5)"><b>30</b><span>週五</span></a><a class="tab" href="#d31" style="--tc:var(--d6)"><b>31</b><span>週六</span></a><a class="tab" href="#prep" style="--tc:var(--prep)"><b>✓</b><span>準備</span></a></nav></div></header><main class="wrap"><div class="notice"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><div class="txt">離線閱讀版：全部行程都在這一頁，往下滑或點上方日期跳轉。要長按編輯請用 App 或線上版。</div></div><div class="spage" id="d26" style="--day:var(--d1)"><section class="hero"><div class="eyebrow">DAY 1 · MON</div><div class="date">10/26</div><h2>抵達、入住、僑村炸雞</h2><div class="meta"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18V7M3 13h18v5M21 18v-3a3 3 0 0 0-3-3h-7v1"/></svg>東大門住宿</span><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>4 個行程</span></div><div class="wm" aria-hidden="true">동대문</div></section><div class="notes"><div class="note open"><button tabindex="-1"><svg class="i ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/></svg><b>提醒</b></button><ul><li>晚餐現場用餐，時間隨實際入境進度調整。</li></ul></div><div class="note open"><button tabindex="-1"><svg class="i ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M9 20l-2 1M15 20l2 1M8 16l-1 4M16 16l1 4"/></svg><b>交通</b></button><ul><li>抵達晚、帶行李，金浦 → 東大門住宿建議直接搭計程車（約 40–50 分）；省錢可搭地鐵 5 號線直達東大門歷史文化公園站。詳細步驟見「金浦機場 → 東大門住宿 交通教學」。</li></ul></div></div><section class="group"><div class="ghead"><h3>行程</h3><span class="cnt">4 項</span></div><ol class="tl rail"><li class="ti"><div class="ti-time"><b>19:45</b></div><div class="ti-node"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="14" r=".5"/><circle cx="15" cy="14" r=".5"/></svg></div><div class="card"><div class="row1"><div class="title"><span>抵達金浦機場國際線</span></div></div><div class="ko">김포공항 국제선</div><div class="detail"><p>入境、領行李預留約 60–90 分鐘。</p><div class="addr"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>서울 강서구 하늘길 38</span></div><div class="acts"><a class="act nv" href="https://map.naver.com/p/entry/place/18952275" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>NAVER 地圖</a></div></div></div></li><li class="ti"><div class="ti-time"><span>約</span><b>21:00</b></div><div class="ti-node"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="14" r=".5"/><circle cx="15" cy="14" r=".5"/></svg></div><div class="card"><div class="row1"><div class="title"><span>金浦機場 → 東大門住宿 交通教學</span></div></div><div class="sub">計程車（建議）或地鐵 5 號線</div><div class="ko">서울 중구 을지로41길 22</div><div class="detail"><p>建議：抵達晚又帶行李，直接搭計程車最省事；想省錢可搭地鐵 5 號線，一班車直達（方案 B）。
+<div id="app"><header class="top"><div class="wrap"><div class="bar"><h1><i class="logo" aria-hidden="true"></i>首爾 6 日<small>10/26–31</small></h1><span class="trip">離線閱讀版</span></div><nav class="tabs"><a class="tab" href="#d26" style="--tc:var(--d1)"><b>26</b><span>週一</span></a><a class="tab" href="#d27" style="--tc:var(--d2)"><b>27</b><span>週二</span></a><a class="tab" href="#d28" style="--tc:var(--d3)"><b>28</b><span>週三</span></a><a class="tab" href="#d29" style="--tc:var(--d4)"><b>29</b><span>週四</span></a><a class="tab" href="#d30" style="--tc:var(--d5)"><b>30</b><span>週五</span></a><a class="tab" href="#d31" style="--tc:var(--d6)"><b>31</b><span>週六</span></a><a class="tab" href="#prep" style="--tc:var(--prep)"><b>✓</b><span>準備</span></a></nav></div></header><main class="wrap"><div class="notice"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><div class="txt">離線閱讀版：全部行程都在這一頁，往下滑或點上方日期跳轉。</div></div><div class="spage" id="d26" style="--day:var(--d1)"><section class="hero"><div class="eyebrow">DAY 1 · MON</div><div class="date">10/26</div><h2>抵達、入住、僑村炸雞</h2><div class="meta"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18V7M3 13h18v5M21 18v-3a3 3 0 0 0-3-3h-7v1"/></svg>東大門住宿</span><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>4 個行程</span></div><div class="wm" aria-hidden="true">동대문</div></section><div class="notes"><div class="note open"><button tabindex="-1"><svg class="i ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/></svg><b>提醒</b></button><ul><li>晚餐現場用餐，時間隨實際入境進度調整。</li></ul></div><div class="note open"><button tabindex="-1"><svg class="i ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M9 20l-2 1M15 20l2 1M8 16l-1 4M16 16l1 4"/></svg><b>交通</b></button><ul><li>抵達晚、帶行李，金浦 → 東大門住宿建議直接搭計程車（約 40–50 分）；省錢可搭地鐵 5 號線直達東大門歷史文化公園站。詳細步驟見「金浦機場 → 東大門住宿 交通教學」。</li></ul></div></div><section class="group"><div class="ghead"><h3>行程</h3><span class="cnt">4 項</span></div><ol class="tl rail"><li class="ti"><div class="ti-time"><b>19:45</b></div><div class="ti-node"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="14" r=".5"/><circle cx="15" cy="14" r=".5"/></svg></div><div class="card"><div class="row1"><div class="title"><span>抵達金浦機場國際線</span></div></div><div class="ko">김포공항 국제선</div><div class="detail"><p>入境、領行李預留約 60–90 分鐘。</p><div class="addr"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>서울 강서구 하늘길 38</span></div><div class="acts"><a class="act nv" href="https://map.naver.com/p/entry/place/18952275" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>NAVER 地圖</a></div></div></div></li><li class="ti"><div class="ti-time"><span>約</span><b>21:00</b></div><div class="ti-node"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M8 21l2-4M16 21l-2-4"/><circle cx="9" cy="14" r=".5"/><circle cx="15" cy="14" r=".5"/></svg></div><div class="card"><div class="row1"><div class="title"><span>金浦機場 → 東大門住宿 交通教學</span></div></div><div class="sub">計程車（建議）或地鐵 5 號線</div><div class="ko">서울 중구 을지로41길 22</div><div class="detail"><p>建議：抵達晚又帶行李，直接搭計程車最省事；想省錢可搭地鐵 5 號線，一班車直達（方案 B）。
 
 方案 A：計程車（約 40–50 分鐘）
 1. 出關後在入境大廳跟著「Taxi 택시」標示，走到 1 樓門外的計程車招呼站排隊。
@@ -280,36 +263,27 @@ a.tab{color:var(--fg);text-decoration:none}
 <script type="application/json" id="trip-data">{"rev":26,"updated":"2026-10-12T06:24:38Z","pages":[{"id":"d26","kind":"day","date":"10/26","dow":"一","en":"MON","color":"d1","title":"抵達、入住、僑村炸雞","hotel":"東大門住宿","remind":["晚餐現場用餐，時間隨實際入境進度調整。"],"transport":["抵達晚、帶行李，金浦 → 東大門住宿建議直接搭計程車（約 40–50 分）；省錢可搭地鐵 5 號線直達東大門歷史文化公園站。詳細步驟見「金浦機場 → 東大門住宿 交通教學」。"],"groups":[{"id":"d26-main","label":"行程","hint":"","links":[],"check":false,"items":[{"id":"i12","time":"19:45","name":"抵達金浦機場國際線","badge":"","sub":"","desc":"入境、領行李預留約 60–90 分鐘。","ko":"김포공항 국제선","addr":"서울 강서구 하늘길 38","ig":"","naver":"https://map.naver.com/p/entry/place/18952275","links":[],"note":"","done":false},{"id":"i91","time":"約 21:00","name":"金浦機場 → 東大門住宿 交通教學","badge":"","sub":"計程車（建議）或地鐵 5 號線","desc":"建議：抵達晚又帶行李，直接搭計程車最省事；想省錢可搭地鐵 5 號線，一班車直達（方案 B）。\n\n方案 A：計程車（約 40–50 分鐘）\n1. 出關後在入境大廳跟著「Taxi 택시」標示，走到 1 樓門外的計程車招呼站排隊。\n2. 搭一般計程車（橘色、白色、銀色）即可；黑色的是模範／大型計程車，起跳比較貴。\n3. 上車後把手機上的韓文地址給司機看：「서울 중구 을지로41길 22」（也可以直接打開下方 NAVER 地圖給司機看）。\n4. 確認司機有按下跳錶。\n5. 車資估算約 ₩28,000–38,000（依路況、時段，以跳錶為準）：首爾一般計程車起跳 ₩4,800；22:00–23:00 加成 20%，23:00 後加成 40%。金浦機場在首爾市內，不用加跨市費。\n6. 付款可刷信用卡或 T-money／WOWPASS，下車前說「카드요」（刷卡）。\n7. 行李放後車廂，下車前確認行李都拿了。\n\n方案 B：地鐵 5 號線直達（約 50 分鐘、約 ₩1,500–2,000）\n1. 跟著「Subway 지하철」標示走到地鐵金浦機場站，用 T-money／WOWPASS 刷卡進站。\n2. 搭 5 號線往「하남검단산 / 마천」方向（不要搭往「방화 傍花」）。\n3. 坐約 24 站，在「동대문역사문화공원 東大門歷史文化公園」站下車，不用轉車。\n4. 出站後用 NAVER 地圖導航走到住宿。\n⚠️ 地鐵站轉角、樓梯多，晚上又累，行李大就建議搭計程車。","ko":"서울 중구 을지로41길 22","addr":"","ig":"","naver":"https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%A4%91%EA%B5%AC%20%EC%9D%84%EC%A7%80%EB%A1%9C41%EA%B8%B8%2022","links":[],"note":"","done":false},{"id":"i13","time":"21:30–22:15","name":"東大門住宿入住","badge":"","sub":"","desc":"22 Eulji-ro 41-gil；辦理入住、放行李。","ko":"","addr":"서울 중구 을지로41길 22","ig":"","naver":"https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%A4%91%EA%B5%AC%20%EC%9D%84%EC%A7%80%EB%A1%9C41%EA%B8%B8%2022","links":[],"note":"","done":false},{"id":"i14","time":"入住後","name":"僑村炸雞 東大門 1 號店","badge":"","sub":"","desc":"蜂蜜或醬油口味，吃完回飯店休息。","ko":"교촌치킨 동대문1호점","addr":"서울 종로구 종로 294 2층","ig":"https://www.instagram.com/p/DaStuuIEW9B/","naver":"https://map.naver.com/p/entry/place/11801976","links":[],"note":"","done":false}]},{"id":"d26-alt","label":"備案","hint":"","links":[],"check":false,"items":[{"id":"i15","time":"","name":"Haokaostan 新堂串燒","badge":"","sub":"晚餐備案","desc":"只有僑村無法用餐、且仍接受點餐時才替換。","ko":"하오카오스탠 신당점","addr":"서울 중구 퇴계로80길 26 1층","ig":"https://www.instagram.com/reel/DAxAwdUoZsT/","naver":"https://map.naver.com/p/entry/place/1569479203","links":[],"note":"","done":false}]}]},{"id":"d27","kind":"day","date":"10/27","dow":"二","en":"TUE","color":"d2","title":"首爾林、淡綠、聖水洞","hotel":"東大門住宿","remind":["奉恩寺、COEX 是跨區備案：體力夠才去，晚餐改在江南吃。"],"transport":["首爾林、淡綠、聖水步行串連。","去 COEX：聖水站 2 號線到三成站不用轉車，含走路約 23 分；計程車約 11 分、7,900₩。"],"groups":[{"id":"d27-main","label":"行程","hint":"","links":[],"check":false,"items":[{"id":"i16","time":"08:30–09:15","name":"住宿附近咖啡廳早餐","badge":"","sub":"","desc":"","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i17","time":"10:00–11:45","name":"首爾林","badge":"","sub":"","desc":"銀杏樹林、池塘與園區散步，保留拍照時間。","ko":"서울숲 은행나무숲","addr":"서울 성동구 성수동1가 678-4","ig":"https://www.instagram.com/p/DG-0ObvyKKp/","naver":"https://naver.me/52aVCN9d","links":[],"note":"","done":false},{"id":"i18","time":"12:00–13:00","name":"淡綠 Damrok","badge":"","sub":"","desc":"韓式湯飯、牛骨湯；在首爾林旁，散步後吃。","ko":"담록","addr":"서울 성동구 서울숲4길 28 B1","ig":"https://www.instagram.com/reel/DaKsPEihzoh/","naver":"https://map.naver.com/p/entry/place/2068950267","links":[],"note":"","done":false},{"id":"i19","time":"13:00–16:00","name":"聖水洞逛街","badge":"","sub":"","desc":"從聖水站出發往聖水核心逛；點「推薦店家」挑 2–3 家。","ko":"성수역 → 성수동","addr":"","ig":"https://www.instagram.com/reel/DXHTPMcEvse/","naver":"https://naver.me/FTqqWucb","links":[],"note":"","done":false,"recs":[{"name":"love old forest 오래된 숲","note":"vintage 眼鏡、器皿、服飾雜貨；在聖水主街外圍","naver":"https://map.naver.com/p/entry/place/1226309277"},{"name":"Fogsy 포그씨","note":"20 多個流行小眾品牌選品，有 IDOL 同款","naver":"https://map.naver.com/p/entry/place/2053512013"},{"name":"Onion 어니언","note":"廢墟風咖啡廳，空間大；推薦杜拜巧克力","naver":"https://naver.me/5fdKslhV"},{"name":"MUSINSA Empty","note":"設計師買手店，國內外獨創品牌、限量款","naver":"https://map.naver.com/p/entry/place/1745323187"},{"name":"MUSINSA KICKS","note":"運動鞋齊全，也有小眾設計師鞋","naver":"https://map.naver.com/p/entry/place/2013881405"},{"name":"Fact alive 팩트 얼라이브","note":"個性＋Y2K 品牌集合店","naver":"https://map.naver.com/p/entry/place/1482519263"},{"name":"MUSINSA 大林倉庫","note":"常有快閃，集合 100 多個設計師品牌","naver":"https://map.naver.com/p/entry/place/1107729911"},{"name":"SILD","note":"小眾設計師品牌買手店","naver":"https://map.naver.com/p/entry/place/1103335197"},{"name":"29CM HOME 이구홈","note":"生活風格選貨：餐具、寢具、文創、燈具","naver":"https://map.naver.com/p/entry/place/2035325711"},{"name":"Adidas Originals","note":"韓國獨立設計團隊，單品和其他地方不同","naver":"https://map.naver.com/p/entry/place/1277712530"}]},{"id":"i20","time":"16:00–17:00","name":"Onion 聖水店","badge":"","sub":"","desc":"工業風空間、咖啡與麵包。","ko":"어니언 성수점","addr":"아차산로9길 8","ig":"https://www.instagram.com/reel/DVF651aE-0F/","naver":"https://naver.me/5fdKslhV","links":[],"note":"","done":false},{"id":"i21","time":"18:00–19:00","name":"聖水 Darak","badge":"","sub":"","desc":"蛋包飯、義大利麵。","ko":"성수다락","addr":"서울 성동구 뚝섬로9길 20 2층","ig":"https://www.instagram.com/reel/C_fu3QBPifV/","naver":"https://naver.me/GbyRJMFg","links":[],"note":"","done":false}]},{"id":"d27-alt","label":"備案","hint":"","links":[],"check":false,"items":[{"id":"i22","time":"","name":"Hoho 食堂 聖水店","badge":"","sub":"午餐備案","desc":"日式定食，淡綠排太久時替換。","ko":"호호식당 성수","addr":"서울숲4길 25","ig":"https://www.instagram.com/p/DRTVXanAUsX/","naver":"https://map.naver.com/p/entry/place/1836968731","links":[],"note":"","done":false},{"id":"i23","time":"","name":"H&M 聖水概念店","badge":"","sub":"選逛","desc":"服飾與空間設計。","ko":"H&M 성수","addr":"서울 성동구 연무장길 17-1","ig":"https://www.instagram.com/reel/DbTHV58SRAI/","naver":"https://naver.me/xVRn97Ck","links":[],"note":"","done":false},{"id":"i24","time":"","name":"MUSINSA 聖水大林倉庫","badge":"","sub":"選逛","desc":"韓國服飾與鞋款。","ko":"무신사 대림창고","addr":"서울 성동구 성수이로 74","ig":"https://www.instagram.com/reel/DXHTPMcEvse/","naver":"https://map.naver.com/p/entry/place/1107729911","links":[],"note":"","done":false},{"id":"i25","time":"","name":"HAUS NOWHERE SEOUL","badge":"","sub":"選逛","desc":"品牌與大型裝置。","ko":"하우스노웨어 서울","addr":"서울 성동구 뚝섬로 433","ig":"https://www.instagram.com/reel/DdG11dAh-WB/","naver":"https://naver.me/xbKh5IKa","links":[],"note":"","done":false},{"id":"i26","time":"","name":"Maman Gelato 聖水店","badge":"","sub":"冰淇淋","desc":"開心果等當季口味。","ko":"마망젤라또 성수점","addr":"서울 성동구 연무장9길 8 1층","ig":"https://www.instagram.com/reel/DY1tLfcyQ9S/","naver":"https://map.naver.com/p/entry/place/1057884253","links":[],"note":"","done":false},{"id":"i27","time":"","name":"Café Cité","badge":"","sub":"咖啡備案","desc":"聖水的咖啡備案，想坐下來休息時再選。","ko":"카페씨떼 성수","addr":"성수이로 71","ig":"","naver":"https://map.naver.com/p/entry/place/1451521480","links":[],"note":"","done":false},{"id":"i29","time":"","name":"Dodot 聖水烤肉","badge":"","sub":"晚餐備案","desc":"逛完仍在首爾林附近、想吃烤肉再選。","ko":"도돗","addr":"서울 성동구 왕십리로4길 15","ig":"https://www.instagram.com/reel/Dd6mdGPTft_/","naver":"https://map.naver.com/p/entry/place/2087098555","links":[],"note":"","done":false},{"id":"i30","time":"","name":"奉恩寺 → COEX 星空圖書館","badge":"","sub":"跨區備案","desc":"體力、時間夠才去；提早離開聖水，圖書館 10:30–22:00。","ko":"","addr":"","ig":"","naver":"https://map.naver.com/p/entry/place/11664007","links":[{"label":"星空圖書館","uri":"https://map.naver.com/p/entry/place/214665616"},{"label":"COEX","uri":"https://naver.me/xk98iP9O"},{"label":"官方資訊","uri":"https://starfield.co.kr/coexmall/starfieldLibrary/library.do"}],"note":"","done":false}]}]},{"id":"d28","kind":"day","date":"10/28","dow":"三","en":"WED","color":"d3","title":"景福宮、北村、LV、南山","hotel":"新堂彩虹飯店（新堂站）","remind":["LV 免費、必須預約，目標 10/28 下午（尚未訂）。","Tercero 建議訂位；MMCA 決定參觀再查票務。","出門前退房寄放行李，先確認可領到晚上。","新堂彩虹飯店入住時間 20:00 起（訂房資料），南山看完夜景再取行李入住剛好。"],"transport":["景福宮 → MMCA → 北村步行；北村 → LV 計程車約 20 分、9,100₩。","南山後回東大門取行李，再搭計程車到新堂彩虹飯店，距離很近（約 10 分鐘內，未實測）。"],"groups":[{"id":"d28-main","label":"行程","hint":"","links":[],"check":false,"items":[{"id":"i31","time":"08:00–08:40","name":"Wagle Wagle Bake Shop 早餐","badge":"","sub":"","desc":"東大門歷史文化公園站附近的烘焙店，可頌、貝果當早餐；NAVER 顯示 07:30 開門。","ko":"와글와글베이크샵","addr":"서울 중구 을지로 245 1층","ig":"","naver":"https://map.naver.com/p/entry/place/1843657031","links":[],"note":"","done":false},{"id":"i32","time":"09:00–11:00","name":"景福宮","badge":"","sub":"","desc":"宮殿、庭園與秋景，不安排韓服。","ko":"경복궁","addr":"서울 종로구 사직로 161","ig":"https://www.instagram.com/p/Dd9BaaOlHAe/","naver":"https://map.naver.com/p/entry/place/11571707","links":[],"note":"","done":false},{"id":"i33","time":"11:15–12:30","name":"MMCA 徐道濩個展（可跳過）","badge":"","sub":"","desc":"景福宮旁的首爾館；不想待室內就跳過。展期 2026/8/27–2027/2/9。","ko":"국립현대미술관 서울","addr":"서울 종로구 삼청로 30","ig":"https://www.instagram.com/reel/Dci1pMFAvFh/","naver":"https://map.naver.com/p/entry/place/19691123","links":[{"label":"展覽","uri":"https://www.mmca.go.kr/exhibitions/exhibitionsDetail.do?exhFlag=2&exhId=202601200002041"},{"label":"預約","uri":"https://www.mmca.go.kr/seoul/reserv/exhibition.do"}],"note":"","done":false},{"id":"i34","time":"12:30–13:20","name":"Kkangtong Mandu","badge":"","sub":"","desc":"手工餃子、拌麵。","ko":"깡통만두","addr":"서울 종로구 북촌로2길 5-6","ig":"https://www.instagram.com/reel/DW6QBncJEOc/","naver":"https://map.naver.com/p/entry/place/11863403","links":[],"note":"","done":false},{"id":"i35","time":"13:30–14:30","name":"北村韓屋村","badge":"","sub":"","desc":"挑一段韓屋街景散步、拍照；住宅區遊客 10:00–17:00。點「推薦店家」看北村／安國一帶的文創小店和展覽。","ko":"북촌한옥마을","addr":"서울 종로구 계동길 일대","ig":"","naver":"https://map.naver.com/p/entry/place/13034552","links":[{"label":"首爾市公告","uri":"https://news.seoul.go.kr/culture/archives/526017"}],"note":"","done":false,"recs":[{"name":"INOURMANSION 인아워맨션","note":"文創雜貨、可愛小物 · 週一至四 11:30–19:30、週五至日 11:00–20:00","naver":"https://map.naver.com/p/entry/place/1677671741"},{"name":"PORTFOLIO 포트폴리오","note":"可愛小物、文具雜貨","naver":"https://map.naver.com/p/entry/place/37658911"},{"name":"Paper doll mate Atelier 페이퍼돌메이트 아틀리에 삼청","note":"紙娃娃、文具小物；和 PORTFOLIO 同一棟（103 號）","naver":"https://map.naver.com/p/entry/place/1073208018"},{"name":"OIMU 오이뮤 북촌","note":"韓國設計文具、小物 · 11:00–19:30","naver":"https://map.naver.com/p/entry/place/1973060595"},{"name":"Object 오브젝트 삼청점","note":"文創選物、雜貨","naver":"https://map.naver.com/p/entry/place/33703611"},{"name":"Zero space 제로스페이스 북촌점","note":"選物小店 · 11:00–19:00","naver":"https://map.naver.com/p/entry/place/1412510460"},{"name":"Cosmic Mansion 코스믹맨션 북촌점","note":"選物小店 · 10:00–20:30","naver":"https://map.naver.com/p/entry/place/1378647461"},{"name":"手作磁鐵小店","note":"在 Gagosipo Gallery 隔壁；NAVER 連結是畫廊位置","naver":"https://map.naver.com/p/entry/place/770910258"},{"name":"born to standout 본투스탠드아웃 삼청","note":"小眾香水品牌旗艦店 · 11:00–20:00","naver":"https://map.naver.com/p/entry/place/2073044801"},{"name":"hanahzo 한아조 안국점","note":"韓國香氛、香皂品牌 · 10:30–19:30","naver":"https://map.naver.com/p/entry/place/1642596029"},{"name":"new mix 뉴믹스 안국점","note":"咖啡 · 09:00–18:00","naver":"https://map.naver.com/p/entry/place/1191882373"},{"name":"FUTURA SEOUL 푸투라서울","note":"展覽：Es Devlin《3rd Poem: Come Home Again》，萬本書的圖書空間＋鏡面迷宮；展到 2027/1/17，安國站 2 號出口","naver":"https://map.naver.com/p/entry/place/1682382331"}]},{"id":"i36","time":"15:15–16:30","name":"LV Visionary Journeys","badge":"必約","sub":"","desc":"新世界 The Reserve 4–5F；免費、必須預約，依成功場次微調。","ko":"루이 비통 비저너리 저니 서울","addr":"서울 중구 소공로 63 신세계 더 리저브 4F–5F","ig":"https://www.instagram.com/reel/Db-qRGbKKsv/","naver":"https://map.naver.com/p/entry/place/2065413555","links":[{"label":"預約入口","uri":"https://www.visionary-journeys-seoul-lv.com/?ln=zh"}],"note":"","done":false},{"id":"i37","time":"16:30–17:30","name":"明洞逛街","badge":"","sub":"","desc":"美妝、服飾與伴手禮。","ko":"명동역 · 4호선","addr":"","ig":"https://www.instagram.com/reel/C47Pee7vfRt/","naver":"https://map.naver.com/?app=Y&version=10&stationId=424&stationClass=2&appMenu=station","links":[],"note":"","done":false},{"id":"i38","time":"17:40–18:40","name":"Tercero Costes","badge":"","sub":"","desc":"海鮮飯、章魚或魚料理；建議訂位。","ko":"떼르세로 코스테스","addr":"서울 중구 마른내로2길 30 2층","ig":"https://www.instagram.com/p/Db7yDzfRct4/","naver":"https://map.naver.com/p/entry/place/2014822397","links":[],"note":"","done":false},{"id":"i39","time":"19:15–20:45","name":"南山首爾塔夜景","badge":"","sub":"","desc":"搭車到纜車下站再搭纜車；計程車不能直達塔下，展望台當日購票。","ko":"N서울타워","addr":"서울 용산구 남산공원길 105","ig":"https://www.instagram.com/reel/DOc6KcbE3-e/","naver":"https://map.naver.com/p/entry/place/11662870","links":[],"note":"","done":false},{"id":"i92","time":"22:00","name":"入住新堂彩虹飯店","badge":"","sub":"住 10/28–10/31，共 3 晚","desc":"南山下來後，先回東大門住宿拿早上寄放的行李，再搭計程車到飯店（距離很近）。\n上車給司機看韓文地址：「서울 중구 다산로 255-1」。\n飯店 20:00 起可入住，有 24 小時櫃台、電梯，可說中文。","ko":"레인보우호텔","addr":"서울 중구 다산로 255-1","ig":"","naver":"https://map.naver.com/p/entry/place/18099925","links":[{"label":"Agoda 訂房頁","uri":"https://www.agoda.com/sh-app/uHzTwRmtSmd"}],"note":"","done":false}]},{"id":"d28-alt","label":"備案","hint":"","links":[],"check":false,"items":[{"id":"i90","time":"","name":"andwich 앤드위치","badge":"","sub":"早餐備案","desc":"手作佛卡夏、三明治早午餐；NAVER 顯示 08:00 開門，在新堂站附近。","ko":"앤드위치","addr":"서울 중구 다산로39길 40 1층","ig":"","naver":"https://map.naver.com/p/entry/place/2089491712","links":[],"note":"","done":false},{"id":"i40","time":"","name":"乙支麵屋 Eulji Myeonok","badge":"","sub":"午餐備案","desc":"平壤冷麵；採用時要調整安國、北村前後動線。","ko":"을지면옥","addr":"서울 종로구 삼일대로30길 12","ig":"https://www.instagram.com/reel/C6JHaEQyKYK/","naver":"https://map.naver.com/p/entry/place/1707416833","links":[],"note":"","done":false},{"id":"i41","time":"","name":"DOTORI GARDEN 安國","badge":"","sub":"休息擇一","desc":"優格、甜點，替換部分散步時間。","ko":"도토리가든 안국점","addr":"서울 종로구 계동길 19-8","ig":"https://www.instagram.com/dotori__seoul/","naver":"https://map.naver.com/p/entry/place/1198045151","links":[],"note":"","done":false},{"id":"i42","time":"","name":"Sooheonjae 韓屋咖啡廳","badge":"","sub":"休息擇一","desc":"韓屋咖啡，替換部分散步時間。","ko":"수헌재","addr":"서울 종로구 북촌로11가길 30","ig":"https://www.instagram.com/reel/DdoHLdnSgS3/","naver":"https://map.naver.com/p/entry/place/4208499145","links":[],"note":"","done":false},{"id":"i43","time":"","name":"MUSINSA STORE 明洞","badge":"","sub":"選逛","desc":"使用原有購物時間。","ko":"무신사 스토어 명동","addr":"서울 중구 명동길 13 B1–3F","ig":"https://www.instagram.com/reel/Dcd6TY3BPks/","naver":"https://map.naver.com/p/entry/place/2055445690","links":[],"note":"","done":false}]}]},{"id":"d29","kind":"day","date":"10/29","dow":"四","en":"THU","color":"d4","title":"ㅎㄷ카페、弘大、延南洞、漢南洞、Ludens","hotel":"新堂彩虹飯店（新堂站）","remind":["風川鰻魚選用前確認最低份量，建議訂位；45ID 攝影師套餐需預約。","先吃晚餐再去 Ludens 看夜景（日落約 17:40 會錯過）；Ludens 必去，先確認營業與露台。","ㅎㄷ카페 每人一杯飲料可逛全部樓層；頂樓偶有活動或包場，出發前看 IG 公告。"],"transport":["新堂 → 弘大：地鐵 2 號線直達，不用轉車（約 30 分，未實測）。","ㅎㄷ카페在弘大入口站與上水站之間，上水站 1 號出口步行約 5 分；逛完步行到弘大商圈。","延南洞 → 漢南洞計程車約 29 分；Nari's House → Ludens 計程車約 10 分；晚上計程車回新堂飯店。"],"groups":[{"id":"d29-main","label":"行程","hint":"","links":[],"check":false,"items":[{"id":"i45","time":"10:00–10:30","name":"이에즈 iyez 早餐","badge":"","sub":"新堂站附近的甜點咖啡廳，10:00 開門","desc":"飯店附近的甜點咖啡廳（카페・디저트），評論最常提到拿鐵、奶茶和餅乾。\n菜單例：뉴욕 말차 라떼 8,500₩、화이트 밀크티와 판단크림 8,500₩、말차 뺑드젠과 멜론 아이스크림 9,000₩、구름 타르트 12,000₩。\n每天 10:00–19:00；店家說時間可能變動，出發前看 IG 公告。\n10:30 吃完走到新堂站（約 8 分），搭 2 號線到弘大，約 11:10 到 ㅎㄷ카페。","ko":"이에즈 신당","addr":"서울 중구 다산로34길 35 1층","ig":"https://www.instagram.com/iyez.sindang/","naver":"https://map.naver.com/p/entry/place/1969442009","links":[],"note":"","done":false},{"id":"i88","time":"11:00–12:00","name":"ㅎㄷ카페（弘大 8 層咖啡廳）","badge":"","sub":"開門就去，人比較少","desc":"整棟 8 層都是咖啡廳，每層主題不同：9F 頂樓（DJ、看得到汝矣島方向）、8F 咖啡吧（先在這層點餐）、7F 媒體藝術／K-pop 躺椅、6F LP 黑膠、5F 藝廊、4F 濟州石谷造景、3F 植物溫室。每人點一杯飲料就能逛全部樓層；美式約 5,800₩、拿鐵約 6,300₩。每天 11:00–21:00。","ko":"홍대카페（ㅎㄷ카페）","addr":"서울 마포구 어울마당로 68","ig":"https://www.instagram.com/hongdae.cafe/","naver":"https://map.naver.com/p/entry/place/1273833411","links":[],"note":"","done":false},{"id":"i46","time":"12:00–13:00","name":"弘大逛街","badge":"","sub":"","desc":"服飾、鞋款與小店。","ko":"홍대입구역 · 2호선","addr":"","ig":"https://www.instagram.com/reel/DWWsI8mAd_b/","naver":"https://map.naver.com/?app=Y&version=10&stationId=239&stationClass=2&appMenu=station","links":[],"note":"","done":false},{"id":"i47","time":"13:00–14:00","name":"弘大 IN Pasta","badge":"","sub":"","desc":"義大利麵。","ko":"홍대IN파스타","addr":"서울 마포구 홍익로5안길 32","ig":"https://www.instagram.com/p/DWipimpku72/","naver":"https://map.naver.com/p/entry/place/911607128","links":[],"note":"","done":false},{"id":"i48","time":"14:00–15:30","name":"延南洞＋Parole & Langue","badge":"","sub":"","desc":"選物小店、京義線林蔭步道；甜派咖啡 Parole & Langue 排在這段裡。點「推薦店家」看延南洞小店清單。","ko":"홍대입구역 3번 출구 · 연남동","addr":"","ig":"https://www.instagram.com/reel/DJWrC-NBLHJ/","naver":"https://map.naver.com/?app=Y&version=10&stationId=239&stationClass=2&appMenu=station","links":[],"note":"","done":false,"recs":[{"name":"Arti wave 아티웨이브","note":"生活選物小店（B1）· 13:00–20:00","naver":"https://map.naver.com/p/entry/place/1531571094"},{"name":"Mill and moi 밀앤모이","note":"生活選物 · 12:00–20:00，週一公休","naver":"https://map.naver.com/p/entry/place/1260524924"},{"name":"Gleaming Day 글리밍데이","note":"文具小物 · 13:00–20:00；NAVER 地址為동교로46길 16","naver":"https://map.naver.com/p/entry/place/1773077511"},{"name":"Hookka Hookka 후카후카스튜디오","note":"工作室小物 · 13:00–19:30；NAVER 顯示已與 UOCO 同店，地址동교로29길 48","naver":"https://map.naver.com/p/entry/place/1141097681"},{"name":"五月商店 오월상점","note":"生活雜貨 · 12:00–21:00（16:00–17:00 休息）","naver":"https://map.naver.com/p/entry/place/1024033858"},{"name":"Butter&Shelter 버터앤쉘터","note":"甜點咖啡 · 10:00–21:00","naver":"https://map.naver.com/p/entry/place/1518148646"}]},{"id":"i49","time":"15:30–16:15","name":"計程車往漢南洞","badge":"","sub":"","desc":"","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i50","time":"16:15–17:15","name":"漢南洞逛街","badge":"","sub":"","desc":"集中挑喜歡的服飾、選物店；點「推薦店家」看漢南洞 11 家逛街路線。","ko":"한강진역 · 6호선","addr":"","ig":"https://www.instagram.com/reel/DW3yT0ekVpV/","naver":"https://map.naver.com/?app=Y&version=10&stationId=631&stationClass=2&appMenu=station","links":[],"note":"","done":false,"recs":[{"name":"Open YY 오픈와이와이","note":"韓國設計師品牌，街頭叛逆、低飽和色；開店就去人少、試穿快","naver":"https://map.naver.com/p/entry/place/1216515125"},{"name":"Leterie 레터리","note":"人手一顆的雙面包，衣服也推薦；店內購買再打 9 折","naver":"https://map.naver.com/p/entry/place/1377111710"},{"name":"aeae 에이이","note":"美式復古＋韓系甜美 Y2K；帽子版型適合女生","naver":"https://map.naver.com/p/entry/place/1116496506"},{"name":"Art Library＋Vinyl & Plastic","note":"現代卡黑膠館，可試聽；經典、搖滾、流行都有","naver":"https://map.naver.com/p/entry/place/37996944"},{"name":"On the spot 온더스팟","note":"運動潮流鞋店","naver":"https://map.naver.com/p/entry/place/1070367521"},{"name":"BEAKER 비이커","note":"國內外設計師品牌，2 層樓可挖寶","naver":"https://map.naver.com/p/entry/place/31292918"},{"name":"Miseki Seoul 미세키서울","note":"黑白灰小眾品牌，上身版型很好","naver":"https://map.naver.com/p/entry/place/2073475293"},{"name":"Milestone Coffee 마일스톤커피","note":"維也納咖啡；人多時可先逛 2F","naver":"https://map.naver.com/p/entry/place/1030067652"},{"name":"enzo blues 엔조블루스","note":"彩色格子、波點、條紋、星星風格","naver":"https://map.naver.com/p/entry/place/1166656055"},{"name":"AWESOME NEEDS HOUSE","note":"設計師品牌帽子店","naver":"https://map.naver.com/p/entry/place/1293301763"},{"name":"GROVE 그로브","note":"簡約經典、好搭配（漢南旗艦店）","naver":"https://map.naver.com/p/entry/place/2075860570"}]},{"id":"i51","time":"17:30–18:30","name":"Nari's House 晚餐","badge":"","sub":"","desc":"薄切豬五花，提早吃晚餐；先問單人最低肉品份數。","ko":"나리의집","addr":"서울 용산구 이태원로 245","ig":"https://www.instagram.com/reel/DbklA_YJ5eU/","naver":"https://map.naver.com/p/entry/place/19882242","links":[],"note":"","done":false},{"id":"i52","time":"18:45–19:45","name":"Seoul Ludens 夜景","badge":"必去","sub":"","desc":"晚餐後上坡看首爾夜景、喝咖啡；先確認營業、座位與露台。","ko":"서울 루덴스","addr":"서울 용산구 회나무로 69 2층","ig":"https://www.instagram.com/reel/Dc_U6VXTVrt/","naver":"https://map.naver.com/p/entry/place/32481253","links":[],"note":"","done":false},{"id":"i53","time":"之後","name":"梨泰院逛逛","badge":"","sub":"","desc":"Ludens 後到梨泰院逛逛，累了直接搭計程車回飯店。\n⚠️ 10/29 接近萬聖節週末，晚上人潮可能很多：走大馬路、避開狹窄的斜坡巷弄，跟著現場警察的管制動線走；覺得太擠就直接離開。","ko":"이태원역 · 6호선","addr":"","ig":"https://www.instagram.com/reel/DQelni3D_pf/","naver":"https://map.naver.com/?app=Y&version=10&stationId=630&stationClass=2&appMenu=station","links":[],"note":"","done":false}]},{"id":"d29-alt","label":"備案","hint":"","links":[],"check":false,"items":[{"id":"i54","time":"","name":"風川鰻魚 延南店","badge":"","sub":"午餐備案","desc":"你指定的鰻魚；確認最低份量，建議訂位。","ko":"풍천장어 연남점","addr":"서울 마포구 동교로27길 39 1층","ig":"","naver":"https://map.naver.com/p/entry/place/11824418","links":[],"note":"","done":false},{"id":"i55","time":"","name":"Seodamheon 弘大刀削麵","badge":"","sub":"午餐備案","desc":"炸醬寬麵、炒海鮮麵。","ko":"서담헌 홍대본점","addr":"서울 마포구 연희로1길 40-3 1층","ig":"https://www.instagram.com/reel/DapjZObSU4e/","naver":"https://map.naver.com/p/entry/place/1300507703","links":[],"note":"","done":false},{"id":"i56","time":"","name":"Parole & Langue 甜派","badge":"","sub":"延南洞咖啡","desc":"甜派與咖啡。","ko":"파롤앤랑그","addr":"서울 마포구 성미산로29안길 8","ig":"https://www.instagram.com/parole_langue/","naver":"https://map.naver.com/p/entry/place/1830575633","links":[],"note":"","done":false},{"id":"i57","time":"","name":"45ID 弘大拍立得工作室","badge":"","sub":"延南洞備案","desc":"想拍照才替換部分逛街時間；攝影師套餐需預約。","ko":"45ID 홍대","addr":"서울 마포구 와우산로29길 48-29 1층","ig":"https://www.instagram.com/reel/DafdDzKPVo6/","naver":"https://map.naver.com/p/entry/place/4352833260","links":[{"label":"預約","uri":"https://45id.imweb.me/hongdae"}],"note":"","done":false},{"id":"i58","time":"","name":"Milestone Coffee 漢南店","badge":"","sub":"咖啡備案","desc":"需要休息才選，會縮短購物時間。","ko":"마일스톤커피 한남점","addr":"한남대로27가길 26","ig":"https://www.instagram.com/p/CalrLbnJR8I/","naver":"https://map.naver.com/p/entry/place/1030067652","links":[],"note":"","done":false},{"id":"i59","time":"","name":"Solsot 漢南店","badge":"","sub":"晚餐備案","desc":"釜飯。","ko":"솔솥 한남점","addr":"서울 용산구 이태원로54가길 26 B1","ig":"https://www.instagram.com/reel/C3c_Vk3SIeG/","naver":"https://map.naver.com/p/entry/place/1176823046","links":[],"note":"","done":false},{"id":"i60","time":"","name":"Johnny Dumpling 本館","badge":"","sub":"晚餐備案","desc":"最低份數不合適時改吃餃子。","ko":"쟈니덤플링 본관","addr":"서울 용산구 보광로59길 33","ig":"","naver":"https://map.naver.com/p/entry/place/1236287159","links":[],"note":"","done":false},{"id":"i61","time":"","name":"Node Coffee & Bar","badge":"","sub":"Ludens 備案","desc":"Ludens 臨休或座位不合適時替換。","ko":"노드 커피 앤 바","addr":"서울 용산구 소월로20길 46 4층","ig":"https://www.instagram.com/reel/DbaiKuDzK1w/","naver":"https://map.naver.com/p/entry/place/2041887602","links":[],"note":"","done":false}]}]},{"id":"d30","kind":"day","date":"10/30","dow":"五","en":"FRI","color":"d5","title":"漢江騎車、63 大廈、駱山冷麵","hotel":"新堂彩虹飯店（新堂站）","remind":["63 SkyPicnic 建議先購票，屋頂依天候開放。","鷺得島有施工與出入管制，入口封閉就折返。","駱山冷麵最後點餐 20:50、週二休。"],"transport":["新堂 → 汝矣渡口：2 號線到東大門歷史文化公園轉 5 號線（約 30 分，未實測）。","騎車單程約 3.5–4.4 km；還車後走到 63 約 16–20 分。","63 → 駱山冷麵搭計程車，留 45–60 分；餐後計程車回飯店。"],"groups":[{"id":"d30-main","label":"行程","hint":"","links":[],"check":false,"items":[{"id":"i62","time":"08:30–09:15","name":"飯店附近早餐","badge":"","sub":"","desc":"","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i63","time":"約 10:00","name":"汝矣島漢江公園租車","badge":"","sub":"","desc":"租腳踏車，先確認還車時間與地點。","ko":"여의도 한강공원","addr":"서울 영등포구 여의동로 330","ig":"https://www.instagram.com/reel/DIYcW-jzEnW/","naver":"https://map.naver.com/p/entry/place/13416869","links":[],"note":"","done":false},{"id":"i64","time":"10:15–12:30","name":"騎車往返鷺得島","badge":"","sub":"","desc":"漢江南岸 → 漢江大橋 → 鷺得島，原路騎回還車；島上只在開放範圍短暫停留。","ko":"노들섬","addr":"서울 용산구 양녕로 445","ig":"https://www.instagram.com/reel/DdbJut7TOCx/","naver":"https://map.naver.com/p/entry/place/1640249712","links":[{"label":"鷺得島公告","uri":"https://nodeul.org/노들섬-2026년-하반기-수시대관-공고/"}],"note":"","done":false},{"id":"i65","time":"12:45–13:45","name":"무월 汝矣島 釜飯韓定食","badge":"","sub":"午餐限定，可一人用餐","desc":"鍋飯現點現煮（南瓜、蘑菇），主菜分開料理，加奶油拌著吃；整套含主菜、配菜、小菜、湯。\n推薦：烤韓牛＆季節鍋飯 ₩26,000、烤土魠魚＆季節鍋飯 ₩21,000、瑞可塔起司瑪格麗酒 ₩12,000。\n11:00–23:00，14:30–17:00 休息；鍋飯只有午餐有，要在 14:30 前點餐。桌邊螢幕點餐有中文菜單。\n地鐵 9 號線汝矣島站 1 號出口步行約 10 分鐘，離 The Hyundai Seoul 約 10 分鐘。","ko":"무월 여의도원센티널점","addr":"서울 영등포구 여의대로 70 원센티널 2층","ig":"https://www.instagram.com/p/DSr4dbDk1AI/","naver":"https://map.naver.com/p/entry/place/2030106927","links":[],"note":"","done":false},{"id":"i66","time":"15:00–18:30","name":"63 SkyPicnic","badge":"","sub":"","desc":"留約 3–3.5 小時，看日景、天色變化與夜景。","ko":"63스카이피크닉","addr":"서울 영등포구 63로 50","ig":"https://www.instagram.com/reel/DcTjiley0Lk/","naver":"https://map.naver.com/p/entry/place/2024936313","links":[{"label":"購票","uri":"https://63skypicnic.com/?locale=zh"}],"note":"","done":false},{"id":"i67","time":"19:30–20:30","name":"駱山冷麵","badge":"","sub":"","desc":"四十年冷麵老店，白鍾元推薦；全店只賣辣水冷麵，普通 ₩10,000、大碗 ₩14,000，怕辣點餐時說少辣。10:30–21:00，最後點餐 20:50，週二休。","ko":"낙산냉면","addr":"서울 종로구 지봉로5길 8","ig":"https://www.instagram.com/reel/C-Z1X9fPTUl/","naver":"https://map.naver.com/p/entry/place/11724946","links":[{"label":"營業資料","uri":"https://www.ktourmap.com/spotDetails.jsp?contentId=2847196"}],"note":"","done":false}]},{"id":"d30-alt","label":"備案","hint":"","links":[],"check":false,"items":[{"id":"i68","time":"","name":"The Hyundai Seoul","badge":"","sub":"購物備案","desc":"下雨替換騎車，或還車後有空才逛。","ko":"더현대 서울","addr":"","ig":"https://www.instagram.com/reel/DViMhAdkUY3/","naver":"https://map.naver.com/p/entry/place/1386302181","links":[],"note":"","done":false}]}]},{"id":"d31","kind":"day","date":"10/31","dow":"六","en":"SAT","color":"d6","title":"石牆路、市廳、首爾站、返程","hotel":"— 返程","remind":["首爾站寄放點先確認營業時間與大行李容量。","市廳展望台免費免預約；伊文麵屋選用時可先訂。","심세정 週六 10:00 才開門，早上可以睡晚一點、先收拾行李。"],"transport":["新堂 → 首爾站：帶行李搭計程車較方便；地鐵可搭 2 號線到市廳轉 1 號線（時間未實測）。","市廳、德壽宮石牆路之間步行即可。","首爾站 → 金浦：AREX「普通列車」約 22 分鐘（第 5 站），直達車不停金浦。詳細步驟見「樂天超市 → 金浦機場 交通教學」。"],"groups":[{"id":"d31-main","label":"行程","hint":"","links":[],"check":false,"items":[{"id":"i70","time":"10:00–10:45","name":"심세정 신당 早餐","badge":"","sub":"新堂站旁烘焙咖啡廳","desc":"招牌是用法國奶油、熟成麵團一層層擀出的千層酥皮麵包。\n⚠️ 週六 10:00 才開門（平日 09:00），營業到 21:30。\n離新堂彩虹飯店很近，走路就到。","ko":"심세정 신당","addr":"서울 중구 퇴계로 409-11 1층","ig":"","naver":"https://naver.me/xpjK8BzM","links":[],"note":"","done":false},{"id":"i69","time":"10:45–11:30","name":"退房，搭計程車到首爾站寄放行李","badge":"","sub":"","desc":"","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i71","time":"11:45–12:30","name":"德壽宮石牆路","badge":"","sub":"","desc":"銀杏、石牆與街景散步；宮內參觀視時間決定。","ko":"덕수궁 돌담길","addr":"서울 중구 세종대로 99 대한문 옆","ig":"https://www.instagram.com/reel/Dd0LJt1pb3i/","naver":"https://map.naver.com/p/entry/place/13513620","links":[],"note":"","done":false},{"id":"i72","time":"12:35–13:05","name":"市廳天空展望台","badge":"","sub":"","desc":"本館 8–9 樓，免費、免預約；週六 07:30–22:00。","ko":"서울시청 하늘전망대","addr":"서울 중구 세종대로 110","ig":"https://www.instagram.com/reel/Dc_V-edyotg/","naver":"https://map.naver.com/p/entry/place/4400294846","links":[{"label":"官方資訊","uri":"https://mediahub.seoul.go.kr/archives/2019271"}],"note":"","done":false},{"id":"i73","time":"13:10–14:00","name":"武橋洞北魚湯（明太魚湯）午餐","badge":"","sub":"1986 年老店，只賣一種湯","desc":"1986 年開到現在的老店，只賣北魚湯（明太魚湯）一種，進門直接比人數就好。\n一份套餐有白飯、北魚湯、蔥油、泡菜和小菜；湯頭清淡像豆腐蛋花湯，可加鹹蝦醬調味，也可以把飯和蔥油加進湯裡吃。部落格寫一份約 ₩9,500（價格可能已調整）。\n排隊人多但翻桌快；可刷卡，2 樓有廁所。\n⚠️ NAVER 顯示週六、日 07:00–15:00（平日到 20:00），10/31 是週六，午餐記得 15:00 前到。","ko":"무교동북어국집","addr":"서울 중구 을지로1길 38","ig":"https://www.instagram.com/p/DX5dUiYD27F/","naver":"https://naver.me/GtYyh4SS","links":[{"label":"部落格介紹","uri":"https://huantabibito.pixnet.net/blog/posts/16137435719"}],"note":"","done":false},{"id":"i74","time":"14:15–16:00","name":"樂天 Outlet＋樂天超市","badge":"","sub":"","desc":"服飾、零食、伴手禮集中補貨。","ko":"롯데아울렛 서울역점","addr":"서울 용산구 한강대로 405","ig":"","naver":"https://map.naver.com/p/entry/place/18692084","links":[{"label":"樂天超市","uri":"https://map.naver.com/p/entry/place/11625327"}],"note":"","done":false},{"id":"i75","time":"16:00–16:30","name":"樂天超市 → 金浦機場 交通教學","badge":"","sub":"AREX 普通列車，約 22 分鐘","desc":"建議 16:00 從樂天超市出發，17:00 前到金浦國際線。\n\n1. 樂天超市（롯데마트 제타플렉스）和樂天 Outlet 就在首爾站建築裡，逛完回到首爾站大廳。\n2. 先到早上寄放的置物櫃或寄放處取行李。\n3. 跟著「공항철도 AREX」標示往地下走，到 AREX 驗票閘門。\n4. ⚠️ 一定要走「일반열차 All Stop（普通列車，藍色）」；「직통열차 Express（直達車，橘色）」只到仁川機場，不停金浦。\n5. 用 T-money／WOWPASS 刷卡進站，不用另外買票，約 ₩1,500 上下（以扣款為準）。\n6. 月台在很深的地下，電扶梯很長，帶行李建議搭電梯。\n7. 首爾站是起點站，搭往「인천공항 仁川機場」方向的普通列車。\n8. 依序經過孔德 → 弘大入口 → 數位媒體城 → 麻谷渡口，第 5 站「김포공항 金浦機場」下車，約 22 分鐘。⚠️ 不要坐過站，再往下會一路開到仁川機場。\n9. 出閘門後跟著「국제선 International Flights（國際線）」標示走到國際線航廈，約 5–10 分鐘。\n10. 到出境大廳找航空公司櫃台報到、托運行李。20:00 起飛，建議 18:00 前完成報到。\n\n小提醒：普通車從首爾站出發比較有位子；車上沒有行李架，行李放在身旁扶好。","ko":"김포공항 국제선","addr":"","ig":"","naver":"https://map.naver.com/p/entry/place/18952275","links":[],"note":"","done":false},{"id":"i76","time":"17:15–17:30","name":"抵金浦國際線報到","badge":"","sub":"","desc":"跟著「출발 Departures」標示到出境樓層的航空公司櫃台報到、托運行李，再過安檢和出境審查。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i77","time":"20:00","name":"起飛","badge":"","sub":"","desc":"回程班機起飛。","ko":"김포공항 국제선","addr":"서울 강서구 하늘길 38","ig":"","naver":"https://map.naver.com/p/entry/place/18952275","links":[],"note":"","done":false}]},{"id":"d31-alt","label":"備案","hint":"","links":[],"check":false,"items":[{"id":"i78","time":"","name":"天空公園","badge":"","sub":"上午備案","desc":"整組替換石牆路與展望台；寄行李後計程車去入口約 32 分，再搭車回首爾站。","ko":"하늘공원","addr":"서울 마포구 하늘공원로 95","ig":"https://www.instagram.com/reel/DQWfWj6kn3L/","naver":"https://map.naver.com/p/entry/place/13219083","links":[],"note":"","done":false},{"id":"i79","time":"","name":"伊文麵屋 光化門店","badge":"","sub":"午餐備案","desc":"冷麵配炭烤肉；午餐在市廳、光化門周邊，店家保留彈性。","ko":"이문면옥 광화문점","addr":"서울 종로구 새문안로2길 10 지하1층 B108호","ig":"https://www.instagram.com/reel/Dd3tBElqt9D/","naver":"https://map.naver.com/p/entry/place/2035703585","links":[],"note":"","done":false}]}]},{"id":"prep","kind":"prep","date":"準備","dow":"","en":"","color":"prep","title":"出發前準備","hotel":"","remind":[],"transport":[],"groups":[{"id":"todo","label":"出發前確認","hint":"","links":[],"check":true,"items":[{"id":"i89","time":"10/23 晚上起","name":"填寫電子入境卡 e-Arrival Card","badge":"必填","sub":"抵達前 3 天內填寫（韓國時間），免費","desc":"時間：抵達前 3 天內（韓國時間），約 10/23 起，建議出發前 1–2 天填。\n費用：免費，只認 www.e-arrivalcard.go.kr。\n準備：護照、Email、航班號碼、10/26 抵達、10/31 離境、第一晚住宿英文地址。\n\n官方 5 個步驟（官網中文是簡體字）：\n1. 打開官網，選「个人申报」（一次可填 1–9 人）。STEP 1「同意条款」：勾選同意並輸入 Email，到信箱收驗證碼填回去（2026/5/6 起要驗證）。\n2. STEP 2「输入护照信息」：可上傳護照照片自動辨識，辨識不準再手動改。英文姓名、護照號碼、效期、生日要逐字核對，國籍是 TAIWAN。\n3. STEP 3「输入旅行信息」：抵達日期 10/26、航班號碼、離境日期 10/31、入境目的（觀光）、職業，以及韓國住宿地址。地址填第一晚完整英文地址「22 Eulji-ro 41-gil, Jung-gu, Seoul」，不要只寫 Seoul。\n4. STEP 4「确认输入信息」：最常看錯的是航班日期、護照號碼、生日。\n5. STEP 5「提交」：記下「签发编号」（申報號碼），存 PDF 或截圖；確認信也會寄到 Email。\n\n小提醒：\n・填錯或航班有變：入境前到官網「查询·修改」修改。\n・14 歲以下不能當代表申報人。","ko":"","addr":"","ig":"","naver":"","links":[{"label":"官方網站（中文）","uri":"https://www.e-arrivalcard.go.kr/portal/main/index.do?locale=CH"},{"label":"圖文填寫教學","uri":"https://gokorea.com.tw/e-arrivalcard/"}],"note":"","done":false},{"id":"i1","time":"","name":"LV Visionary Journeys 預約","badge":"必約","sub":"10/28 下午，免費但必須預約","desc":"新世界 The Reserve 4–5F；免費、必須預約，依成功場次微調。","ko":"루이 비통 비저너리 저니 서울","addr":"서울 중구 소공로 63 신세계 더 리저브 4F–5F","ig":"https://www.instagram.com/reel/Db-qRGbKKsv/","naver":"https://map.naver.com/p/entry/place/2065413555","links":[{"label":"預約入口","uri":"https://www.visionary-journeys-seoul-lv.com/?ln=zh"}],"note":"","done":false},{"id":"i2","time":"","name":"63 SkyPicnic 購票","badge":"","sub":"10/30 15:00 入場，屋頂依天候開放","desc":"留約 3–3.5 小時，看日景、天色變化與夜景。","ko":"63스카이피크닉","addr":"서울 영등포구 63로 50","ig":"https://www.instagram.com/reel/DcTjiley0Lk/","naver":"https://map.naver.com/p/entry/place/2024936313","links":[{"label":"購票","uri":"https://63skypicnic.com/?locale=zh"}],"note":"","done":false}]},{"id":"stay","label":"住宿與機場","hint":"","links":[],"check":false,"items":[{"id":"h0","time":"10/26 – 10/28","name":"東大門住宿","badge":"","sub":"東大門","desc":"22 Eulji-ro 41-gil, Jung-gu","ko":"","addr":"서울 중구 을지로41길 22","ig":"","naver":"https://map.naver.com/p/search/%EC%84%9C%EC%9A%B8%20%EC%A4%91%EA%B5%AC%20%EC%9D%84%EC%A7%80%EB%A1%9C41%EA%B8%B8%2022","links":[],"note":"","done":false},{"id":"h1","time":"10/28 – 10/31","name":"新堂彩虹飯店 Sindang Rainbow Hotel","badge":"","sub":"新堂","desc":"入住 20:00 起；2 星、有電梯、可說中文、24 小時櫃台、可寄放行李。地鐵 2、6 號線新堂站附近。","ko":"레인보우호텔","addr":"서울 중구 다산로 255-1","ig":"","naver":"https://map.naver.com/p/entry/place/18099925","links":[{"label":"Agoda 訂房頁","uri":"https://www.agoda.com/sh-app/uHzTwRmtSmd"}],"note":"","done":false},{"id":"h9","time":"10/26 抵達・10/31 20:00 起飛","name":"金浦機場國際線","badge":"","sub":"","desc":"","ko":"김포공항 국제선","addr":"서울 강서구 하늘길 38","ig":"","naver":"https://map.naver.com/p/entry/place/18952275","links":[],"note":"","done":false}]},{"id":"entry","label":"入境手續（台灣護照）","hint":"","links":[{"label":"電子入境卡官網","uri":"https://www.e-arrivalcard.go.kr/"},{"label":"K-ETA 官網","uri":"https://www.k-eta.go.kr/"},{"label":"韓國入境整理（Funliday）","uri":"https://www.funliday.com/posts/2026-korea-entry/"},{"label":"電子入境卡 4/10 改版報導（中時）","uri":"https://www.chinatimes.com/realtimenews/20260410004675-260407"}],"check":false,"items":[{"id":"i3","time":"","name":"護照與免簽","badge":"","sub":"","desc":"持中華民國護照觀光免簽，每次最多停留 90 天。護照效期要 6 個月以上。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i4","time":"","name":"K-ETA：這趟不用申請","badge":"","sub":"","desc":"台灣在韓國的 K-ETA 暫時免申請名單上，韓國法務部已延長到 2026/12/31，10/26 入境在期限內。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i5","time":"","name":"電子入境卡 e-Arrival Card：要填","badge":"","sub":"","desc":"免 K-ETA 不等於免入境卡。抵達韓國 3 天前起可在官方網站免費填寫（以韓國時間計算），10/26 抵達，約 10/23 起可以填。每人都要一份，「个人申报」一次最多可幫 9 人一起填。詳細步驟見「出發前確認」第一項。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i6","time":"","name":"填寫需要準備","badge":"","sub":"","desc":"護照（英文姓名、護照號碼、效期要和護照一模一樣）、可收信的 Email（要收驗證碼）、航班號碼、抵達日期 10/26、離境日期 10/31、入境目的、職業、第一晚住宿英文地址「22 Eulji-ro 41-gil, Jung-gu, Seoul」。送出後記下签发编号，存 PDF 或截圖；航班變更到官網「查询·修改」更新。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i7","time":"","name":"小心假網站","badge":"","sub":"","desc":"只認 .go.kr 結尾的官方網址，官方填寫免費；搜尋結果裡有收費代辦網站，不要點錯。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i8","time":"","name":"「台灣」欄位","badge":"","sub":"","desc":"電子入境卡曾把出發地顯示成 CHINA（TAIWAN），外交部一度建議改填紙本；韓方 2026/4/10 改版後已刪除該欄位，國籍維持 TAIWAN。紙本入境卡是否仍提供各方說法不一，以電子入境卡為主，機上或機場有紙本也可以填。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i9","time":"","name":"Q-Code 檢疫申報","badge":"","sub":"","desc":"從台灣直飛、身體沒有發燒咳嗽等症狀，不需要填；21 天內去過檢疫管理地區或有症狀才要申報。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i10","time":"","name":"海關申報","badge":"","sub":"","desc":"超過 US$10,000 外幣、US$800 的物品、2 公升酒、60 ml 香水或 200 支菸才要申報；沒有就走綠色「無申報」通道，不用填表。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false},{"id":"i11","time":"","name":"金浦機場入境流程","badge":"","sub":"","desc":"下機 → 外國人通道查驗護照、按指紋、拍臉部照片 → 領行李 → 海關綠色通道 → 出關。整段預留 60–90 分鐘。","ko":"","addr":"","ig":"","naver":"","links":[],"note":"","done":false}]}]}]}</script>
 <script id="app-js">
 (function(){
-var EMBED=JSON.parse(document.getElementById('trip-data').textContent);
-var EMBED_REV=EMBED.rev;
-var state=EMBED;
-var RESET=':root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.4 system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}';
-var LS_DRAFT='seoul-trip-draft2', LS_UI='seoul-trip-ui';
+var state=JSON.parse(document.getElementById('trip-data').textContent);
+var LS_UI='seoul-trip-ui', LS_DONE='seoul-trip-done';
 function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-
-var draft=lsGet(LS_DRAFT), unsynced=false;
-if(draft&&draft.baseRev===EMBED_REV&&draft.state){state=draft.state;unsynced=true}
-var oldDraft=(draft&&draft.state&&draft.baseRev!==EMBED_REV)?draft:null;
 var ui=lsGet(LS_UI)||{};
+var done=lsGet(LS_DONE);
+if(!done){
+  // keep checklist ticks made back when the itinerary was editable
+  done={};var old=lsGet('seoul-trip-draft2');
+  if(old&&old.state&&old.state.pages)old.state.pages.forEach(function(p){(p.groups||[]).forEach(function(g){if(g.check)(g.items||[]).forEach(function(it){if(it.done)done[it.id]=true})})});
+}
 var tab=ui.tab||state.pages[0].id, hintOff=!!ui.hintOff;
-var expanded={}, recsOpen={}, noteOpen={}, groupOpen={};
-var api=null, mode='pending', saveTimer=null, saveStatus=unsynced?'dirty':'saved', retried=false;
+var expanded={}, recsOpen={}, noteOpen={}, groupOpen={}, pop='';
 var YEAR=2026, AREA={d26:'동대문',d27:'성수',d28:'경복궁',d29:'홍대',d30:'한강',d31:'덕수궁'};
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function safeUrl(u){u=String(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;return /^https?:\/\/[^\s]+$/i.test(u)?u:''}
-function uid(p){return p+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function saveUi(){lsSet(LS_UI,{tab:tab,hintOff:hintOff})}
 function pageById(id){for(var i=0;i<state.pages.length;i++)if(state.pages[i].id===id)return state.pages[i]}
-function findGroup(gid){for(var i=0;i<state.pages.length;i++){var p=state.pages[i];for(var j=0;j<p.groups.length;j++)if(p.groups[j].id===gid)return {page:p,group:p.groups[j]}}}
-function findItem(id){for(var i=0;i<state.pages.length;i++){var p=state.pages[i];for(var j=0;j<p.groups.length;j++){var g=p.groups[j];for(var k=0;k<g.items.length;k++)if(g.items[k].id===id)return {page:p,group:g,idx:k,item:g.items[k]}}}}
-function recsToText(rs){return (rs||[]).map(function(r){return [r.name,r.note||'',r.naver||''].join(' | ')}).join('\n')}
-function textToRecs(t){return String(t||'').split('\n').map(function(line){var p=line.split('|').map(function(x){return x.trim()});if(!p[0])return null;return {name:p[0],note:p[1]||'',naver:safeUrl(p[2]||'')}}).filter(Boolean)}
-function linksToText(ls){return (ls||[]).map(function(l){return l.label+' | '+l.uri}).join('\n')}
-function textToLinks(t){return String(t||'').split('\n').map(function(line){line=line.trim();if(!line)return null;var m=line.split('|');var label,uri;if(m.length>1){label=m[0].trim();uri=m.slice(1).join('|').trim()}else{uri=line;label='連結'}uri=safeUrl(uri);return uri?{label:label||'連結',uri:uri}:null}).filter(Boolean)}
-function lines(t){return String(t||'').split('\n').map(function(x){return x.trim()}).filter(Boolean)}
+function isDone(it){return Object.prototype.hasOwnProperty.call(done,it.id)?!!done[it.id]:!!it.done}
 
 /* ---------- icons ---------- */
 var IC={
@@ -323,15 +297,11 @@ var IC={
  pin:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
  ig:'<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/>',
  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
- edit:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/>',
  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/>',
  train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14M9 20l-2 1M15 20l2 1M8 16l-1 4M16 16l1 4"/>',
  chev:'<path d="M6 9l6 6 6-6"/>',
  bed:'<path d="M3 18V7M3 13h18v5M21 18v-3a3 3 0 0 0-3-3h-7v1"/>',
- list:'<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>',
- plus:'<path d="M12 5v14M5 12h14"/>',
- clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
- spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/>'
+ list:'<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>'
 };
 function ic(n,cls){return '<svg class="i'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" aria-hidden="true">'+(IC[n]||IC.info)+'</svg>'}
 function typeOf(it){
@@ -364,15 +334,6 @@ try{if(tp&&!sessionStorage.getItem('seoul-trip-opened'))tab=tp.id;sessionStorage
 
 var app=document.getElementById('app');
 
-function statusText(){
-  if(saveStatus==='saving')return '儲存中…';
-  if(saveStatus==='dirty')return mode==='remote'?'有修改，稍後自動儲存':'有修改';
-  if(saveStatus==='local')return '存在這台手機';
-  if(saveStatus==='error')return '儲存失敗，已暫存在手機';
-  return mode==='remote'?'已儲存':'已載入';
-}
-function renderStatus(){var el=document.getElementById('status');if(el){el.dataset.s=saveStatus;el.lastChild.textContent=statusText()}}
-
 /* ---------- render ---------- */
 function recsHtml(it){
   if(!(it.recs||[]).length||!recsOpen[it.id])return '';
@@ -380,14 +341,15 @@ function recsHtml(it){
 }
 function itemHtml(it,g,ctx){
   var open=!!expanded[it.id], t=parseTime(it.time), type=g.check?'info':typeOf(it);
-  var cls='ti'+(it.done?' done':'')+(it.badge&&!g.check?' key':'')+(ctx.past&&ctx.past(t)?' past':'')+(ctx.now&&ctx.now(t)?' nowi':'');
-  var h='<li class="'+cls+'" data-lp="item:'+it.id+'" data-tap="'+it.id+'" tabindex="0" aria-expanded="'+open+'">';
+  var cls='ti'+(isDone(it)?' done':'')+(it.badge&&!g.check?' key':'')+(ctx.past&&ctx.past(t)?' past':'')+(ctx.now&&ctx.now(t)?' nowi':'')
+    +(pop==='item:'+it.id?' pop':'')+(pop==='recs:'+it.id?' pop-r':'');
+  var h='<li class="'+cls+'" data-tap="'+it.id+'" tabindex="0" aria-expanded="'+open+'">';
   if(ctx.rail){
     h+='<div class="ti-time">'+(t?(t.pre?'<span>'+esc(t.pre)+'</span>':'')+'<b>'+t.a+'</b>'+(t.b?'<span>'+t.b+'</span>':''):'<em>'+esc(it.time||'')+'</em>')+'</div>';
     h+='<div class="ti-node">'+ic(type)+'</div>';
   }
   h+='<div class="card"><div class="row1">';
-  if(g.check)h+='<input type="checkbox" class="chk" data-chk="'+it.id+'"'+(it.done?' checked':'')+' aria-label="完成">';
+  if(g.check)h+='<input type="checkbox" class="chk" data-chk="'+it.id+'"'+(isDone(it)?' checked':'')+' aria-label="完成">';
   h+='<div class="title"><span>'+esc(it.name)+'</span>'+(it.badge?'<span class="badge">'+esc(it.badge)+'</span>':'')+'</div>'+ic('chev','cv')+'</div>';
   if(!ctx.rail&&it.time)h+='<div class="sub">'+esc(it.time)+'</div>';
   if(it.sub)h+='<div class="sub">'+esc(it.sub)+'</div>';
@@ -398,41 +360,38 @@ function itemHtml(it,g,ctx){
     if(it.desc)h+='<p>'+esc(it.desc)+'</p>';
     if(it.note)h+='<p class="mynote">'+esc(it.note)+'</p>';
     if(it.addr)h+='<div class="addr">'+ic('pin')+'<span>'+esc(it.addr)+'</span></div>';
-    var q=it.ko||it.addr||it.name, nv=safeUrl(it.naver), ig=safeUrl(it.ig);
-    h+='<div class="acts">';
-    if(nv)h+='<a class="act nv" href="'+esc(nv)+'" target="_blank" rel="noopener">'+ic('pin')+'NAVER 地圖</a>';else if(it.ko||it.addr)h+='<a class="act nv" href="https://map.naver.com/p/search/'+encodeURIComponent(q)+'" target="_blank" rel="noopener">'+ic('pin')+'NAVER 搜尋</a>';
-    if(ig)h+='<a class="act ig" href="'+esc(ig)+'" target="_blank" rel="noopener">'+ic('ig')+(/\/reel\//.test(ig)?'IG Reel':'Instagram')+'</a>';
-    if((it.recs||[]).length)h+='<button class="act'+(recsOpen[it.id]?' on':'')+'" data-act="recs" data-id="'+it.id+'" aria-expanded="'+(!!recsOpen[it.id])+'">'+ic('shop')+'推薦店家（'+it.recs.length+'）</button>';
-    (it.links||[]).forEach(function(l){var u=safeUrl(l.uri);if(u)h+='<a class="act" href="'+esc(u)+'" target="_blank" rel="noopener">'+ic('link')+esc(l.label)+'</a>'});
-    h+='<button class="act ghost" data-act="edit" data-id="'+it.id+'">'+ic('edit')+'編輯</button></div>'+recsHtml(it)+'</div>';
+    var q=it.ko||it.addr||it.name, nv=safeUrl(it.naver), ig=safeUrl(it.ig), acts='';
+    if(nv)acts+='<a class="act nv" href="'+esc(nv)+'" target="_blank" rel="noopener">'+ic('pin')+'NAVER 地圖</a>';else if(it.ko||it.addr)acts+='<a class="act nv" href="https://map.naver.com/p/search/'+encodeURIComponent(q)+'" target="_blank" rel="noopener">'+ic('pin')+'NAVER 搜尋</a>';
+    if(ig)acts+='<a class="act ig" href="'+esc(ig)+'" target="_blank" rel="noopener">'+ic('ig')+(/\/reel\//.test(ig)?'IG Reel':'Instagram')+'</a>';
+    if((it.recs||[]).length)acts+='<button class="act'+(recsOpen[it.id]?' on':'')+'" data-act="recs" data-id="'+it.id+'" aria-expanded="'+(!!recsOpen[it.id])+'">'+ic('shop')+'推薦店家（'+it.recs.length+'）</button>';
+    (it.links||[]).forEach(function(l){var u=safeUrl(l.uri);if(u)acts+='<a class="act" href="'+esc(u)+'" target="_blank" rel="noopener">'+ic('link')+esc(l.label)+'</a>'});
+    if(acts)h+='<div class="acts">'+acts+'</div>';
+    h+=recsHtml(it)+'</div>';
   }
   return h+'</div></li>';
 }
 function noteHtml(pid,kind,label,icon,arr){
   if(!(arr||[]).length)return '';
   var k=pid+kind, open=!!noteOpen[k];
-  return '<div class="note'+(open?' open':'')+'"><button data-act="note" data-k="'+k+'" aria-expanded="'+open+'">'+ic(icon,'ic')+'<b>'+label+'</b><span class="pv">'+esc(arr[0])+'</span>'+ic('chev','cv')+'</button>'+(open?'<ul>'+arr.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+'</div>';
+  return '<div class="note'+(open?' open':'')+(pop==='note:'+k?' pop':'')+'"><button data-act="note" data-k="'+k+'" aria-expanded="'+open+'">'+ic(icon,'ic')+'<b>'+label+'</b><span class="pv">'+esc(arr[0])+'</span>'+ic('chev','cv')+'</button>'+(open?'<ul>'+arr.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul>':'')+'</div>';
 }
 var lastIdx=-1;
 function render(){
   var y=window.scrollY;
   var page=pageById(tab)||state.pages[0];tab=page.id;
-  var idx=state.pages.indexOf(page), dir=lastIdx<0||lastIdx===idx?'':(idx>lastIdx?' from-r':' from-l');
-  var moved=lastIdx!==idx, stageCls=moved?'stage'+dir:''; lastIdx=idx;
+  var idx=state.pages.indexOf(page), moved=lastIdx!==idx;
+  var stageCls=moved?'stage'+(lastIdx<0?'':(idx>lastIdx?' from-r':' from-l')):''; lastIdx=idx;
   document.documentElement.style.setProperty('--day','var(--'+page.color+')');
-  var h='<header class="top"><div class="wrap"><div class="bar"><h1>首爾 6 日<small>10/26–31</small></h1><span class="trip">'+esc(tripLabel())+'</span></div>';
+  var h='<header class="top"><div class="wrap"><div class="bar"><h1><i class="logo" aria-hidden="true"></i>首爾 6 日<small>10/26–31</small></h1><span class="trip">'+esc(tripLabel())+'</span></div>';
   h+='<div class="tabs" role="tablist" aria-label="日期">';
   state.pages.forEach(function(p){
     var big=p.kind==='day'?(p.date.split('/')[1]||p.date):'✓', small=p.kind==='day'?'週'+p.dow:'準備';
     h+='<button class="tab" role="tab" data-tab="'+p.id+'" aria-selected="'+(p.id===tab)+'" style="--tc:var(--'+p.color+')"><b>'+esc(big)+'</b><span>'+esc(small)+'</span>'+(isToday(p)?'<i class="now">今天</i>':'')+'</button>';
   });
   h+='</div></div></header><main class="wrap"><div class="'+stageCls+'">';
-  if(oldDraft)h+='<div class="notice">'+ic('spark')+'<div class="txt">行程有新版本了。你之前在這支手機上的修改還保留著，要用哪一份？<div class="acts"><button class="pill" data-act="take-new">換成新版</button><button data-act="keep-mine">用我修改過的</button></div></div></div>';
-  if(!hintOff)h+='<div class="notice">'+ic('info')+'<div class="txt">點一下看說明和地圖，<b>長按</b>可以編輯；左右滑動切換日期。<div class="acts"><button data-act="hint-off">知道了</button></div></div></div>';
-  // hero
-  var all=[];page.groups.forEach(function(g){all=all.concat(g.items)});
+  if(!hintOff)h+='<div class="notice">'+ic('info')+'<div class="txt">點一下行程看說明和地圖；左右滑動切換日期。<div class="acts"><button data-act="hint-off">知道了</button></div></div></div>';
   var main=page.groups[0]?page.groups[0].items:[];
-  h+='<section class="hero'+(page.kind!=='day'?' prep':'')+'" data-lp="page:'+page.id+'" tabindex="0">';
+  h+='<section class="hero'+(page.kind!=='day'?' prep':'')+'">';
   if(page.kind==='day'){
     h+='<div class="eyebrow">DAY '+(idx+1)+' · '+esc(page.en)+(isToday(page)?'<span class="tp">今天</span>':'')+'</div>';
     h+='<div class="date">'+esc(page.date)+'</div><h2>'+esc(page.title)+'</h2><div class="meta">';
@@ -440,11 +399,10 @@ function render(){
     h+='<span>'+ic('list')+main.length+' 個行程</span></div>';
     if(AREA[page.id])h+='<div class="wm" aria-hidden="true">'+AREA[page.id]+'</div>';
   }else{
-    var todo=page.groups[0]?page.groups[0].items:[],done=todo.filter(function(x){return x.done}).length;
-    h+='<div class="eyebrow">出發前</div><div class="date">準備</div><h2>'+esc(page.title)+'</h2><div class="meta"><span>'+ic('list')+'確認清單 '+done+' / '+todo.length+'</span></div>';
+    var dn0=main.filter(isDone).length;
+    h+='<div class="eyebrow">出發前</div><div class="date">準備</div><h2>'+esc(page.title)+'</h2><div class="meta"><span>'+ic('list')+'確認清單 '+dn0+' / '+main.length+'</span></div>';
   }
   h+='</section>';
-  // next up (today only)
   var ctx={rail:page.kind==='day'};
   if(isToday(page)){
     var nm=seoulNow().min, nx=null, cur=null;
@@ -458,234 +416,71 @@ function render(){
   }
   page.groups.forEach(function(g,gi){
     var isAlt=gi>0&&page.kind==='day', closed=isAlt&&!groupOpen[g.id];
-    h+='<section class="group'+(isAlt?' alt':'')+(closed?' closed':'')+'"><div class="ghead" data-lp="group:'+g.id+'"'+(isAlt?' data-g="'+g.id+'"':'')+' tabindex="0"><h3>'+esc(g.label)+'</h3>';
+    h+='<section class="group'+(isAlt?' alt':'')+(closed?' closed':'')+(pop==='grp:'+g.id?' pop':'')+'"><div class="ghead"'+(isAlt?' data-g="'+g.id+'"':'')+'><h3>'+esc(g.label)+'</h3>';
     h+=isAlt?'<button class="tg" data-act="grp" data-g="'+g.id+'" aria-expanded="'+!closed+'">'+g.items.length+' 個'+ic('chev')+'</button>':'<span class="cnt">'+g.items.length+' 項</span>';
     h+='</div>';
     if(closed){h+='</section>';return}
-    if(g.check){var dn=g.items.filter(function(x){return x.done}).length;h+='<div class="progress" aria-label="完成 '+dn+' / '+g.items.length+'"><i style="width:'+(g.items.length?dn/g.items.length*100:0)+'%"></i></div>'}
+    if(g.check){var dn=g.items.filter(isDone).length;h+='<div class="progress" aria-label="完成 '+dn+' / '+g.items.length+'"><i style="width:'+(g.items.length?dn/g.items.length*100:0)+'%"></i></div>'}
     if(g.hint)h+='<p class="ghint">'+esc(g.hint)+'</p>';
     if((g.links||[]).length)h+='<div class="glinks">'+g.links.map(function(l){var u=safeUrl(l.uri);return u?'<a class="act" href="'+esc(u)+'" target="_blank" rel="noopener">'+ic('link')+esc(l.label)+'</a>':''}).join('')+'</div>';
     var c={rail:ctx.rail&&!isAlt,past:gi===0?ctx.past:null,now:gi===0?ctx.now:null};
-    h+='<ol class="tl'+(c.rail?' rail':'')+'">'+g.items.map(function(it){return itemHtml(it,g,c)}).join('')+'</ol>';
-    h+='<button class="add" data-act="add" data-group="'+g.id+'">'+ic('plus')+'新增到「'+esc(g.label)+'」</button></section>';
+    h+='<ol class="tl'+(c.rail?' rail':'')+'">'+g.items.map(function(it){return itemHtml(it,g,c)}).join('')+'</ol></section>';
   });
-  h+='<div class="foot">第 '+state.rev+' 版 · 可離線使用<br><span class="status" id="status" data-s="'+saveStatus+'" role="status" style="justify-content:center"><i></i><span>'+statusText()+'</span></span></div></div></main>';
-  app.innerHTML=h;
+  h+='<div class="foot">第 '+state.rev+' 版 · 可離線使用</div></div></main>';
+  app.innerHTML=h;pop='';
   window.scrollTo(0,y);
   var sel=moved&&app.querySelector('.tab[aria-selected="true"]');if(sel&&sel.scrollIntoView)sel.scrollIntoView({block:'nearest',inline:'center'});
 }
-function goTab(id,top){if(id===tab)return;tab=id;saveUi();render();if(top!==false)window.scrollTo(0,0)}
+function goTab(id){if(id===tab)return;tab=id;saveUi();render();window.scrollTo(0,0)}
+function toggleItem(id){expanded[id]=!expanded[id];pop='item:'+id;render()}
 
 /* ---------- swipe between days ---------- */
 var sw=null;
-app.addEventListener('touchstart',function(e){if(sheetOpen||e.touches.length!==1||e.target.closest('.tabs,.recs,input,textarea'))return;sw={x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()}},{passive:true});
+app.addEventListener('touchstart',function(e){if(e.touches.length!==1||e.target.closest('.tabs,.recs'))return;sw={x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()}},{passive:true});
 app.addEventListener('touchend',function(e){
-  if(!sw||lp.fired){sw=null;return}
+  if(!sw)return;
   var t=e.changedTouches[0],dx=t.clientX-sw.x,dy=t.clientY-sw.y,dt=Date.now()-sw.t;sw=null;
   if(Math.abs(dx)>70&&Math.abs(dy)<45&&dt<700){
-    var i=state.pages.findIndex(function(p){return p.id===tab}), j=i+(dx<0?1:-1);
+    var i=state.pages.indexOf(pageById(tab)), j=i+(dx<0?1:-1);
     if(j>=0&&j<state.pages.length)goTab(state.pages[j].id);
   }
 },{passive:true});
 
-/* ---------- long press ---------- */
-var lp={t:null,el:null,x:0,y:0,fired:false};
-function lpCancel(){if(lp.t)clearTimeout(lp.t);lp.t=null;if(lp.el)lp.el.classList.remove('pressing');lp.el=null}
-app.addEventListener('pointerdown',function(e){
-  lp.fired=false;
-  if(e.button>0)return;
-  var el=e.target.closest('[data-lp]');
-  if(!el||e.target.closest('a,button,input,.detail'))return;
-  lp.el=el;lp.x=e.clientX;lp.y=e.clientY;lp.fired=false;
-  el.classList.add('pressing');
-  lp.t=setTimeout(function(){
-    var key=el.dataset.lp;lp.fired=true;lpCancel();
-    try{navigator.vibrate&&navigator.vibrate(12)}catch(err){}
-    openEditor(key);
-  },500);
-});
-app.addEventListener('pointermove',function(e){if(lp.t&&(Math.abs(e.clientX-lp.x)>10||Math.abs(e.clientY-lp.y)>10))lpCancel()});
-['pointerup','pointercancel','pointerleave'].forEach(function(n){app.addEventListener(n,lpCancel)});
-window.addEventListener('scroll',lpCancel,{passive:true});
-var lpGuard=0;
-app.addEventListener('touchend',function(e){if(lp.fired){e.preventDefault();lpGuard=Date.now()+450}},{passive:false});
-document.addEventListener('click',function(e){if(Date.now()<lpGuard&&e.target.closest&&e.target.closest('#sheet,#scrim')){e.preventDefault();e.stopPropagation()}},true);
-document.addEventListener('focusin',function(e){if(Date.now()<lpGuard&&e.target.closest&&e.target.closest('#sheet')){e.target.blur()}},true);
-app.addEventListener('contextmenu',function(e){if(e.target.closest('[data-lp]')&&!e.target.closest('.detail'))e.preventDefault()});
-
+/* ---------- taps ---------- */
 app.addEventListener('click',function(e){
-  if(lp.fired){e.preventDefault();e.stopPropagation();lp.fired=false;return}
   var t=e.target.closest('[data-tab]');
   if(t){goTab(t.dataset.tab);return}
   var a=e.target.closest('[data-act]');
   if(a){
     var act=a.dataset.act;
     if(act==='hint-off'){hintOff=true;saveUi();render()}
-    else if(act==='keep-mine'){state=oldDraft.state;oldDraft=null;lsSet(LS_DRAFT,{baseRev:EMBED_REV,state:state});render();toast('已換回你修改過的版本')}
-    else if(act==='take-new'){oldDraft=null;try{localStorage.removeItem(LS_DRAFT)}catch(err){}render();toast('已換成新版')}
-    else if(act==='edit')openEditor('item:'+a.dataset.id);
-    else if(act==='recs'){recsOpen[a.dataset.id]=!recsOpen[a.dataset.id];render()}
-    else if(act==='note'){noteOpen[a.dataset.k]=!noteOpen[a.dataset.k];render()}
-    else if(act==='grp'){groupOpen[a.dataset.g]=!groupOpen[a.dataset.g];render()}
-    else if(act==='jump'){expanded[a.dataset.id]=true;render();var el=app.querySelector('[data-tap="'+a.dataset.id+'"]');if(el)el.scrollIntoView({block:'center',behavior:'smooth'})}
-    else if(act==='add')openEditor('new:'+a.dataset.group);
+    else if(act==='recs'){recsOpen[a.dataset.id]=!recsOpen[a.dataset.id];pop='recs:'+a.dataset.id;render()}
+    else if(act==='note'){noteOpen[a.dataset.k]=!noteOpen[a.dataset.k];pop='note:'+a.dataset.k;render()}
+    else if(act==='grp'){groupOpen[a.dataset.g]=!groupOpen[a.dataset.g];pop='grp:'+a.dataset.g;render()}
+    else if(act==='jump'){expanded[a.dataset.id]=true;pop='item:'+a.dataset.id;render();var el=app.querySelector('[data-tap="'+a.dataset.id+'"]');if(el)el.scrollIntoView({block:'center',behavior:'smooth'})}
     return;
   }
   var gh=e.target.closest('.ghead[data-g]');
-  if(gh){groupOpen[gh.dataset.g]=!groupOpen[gh.dataset.g];render();return}
+  if(gh){groupOpen[gh.dataset.g]=!groupOpen[gh.dataset.g];pop='grp:'+gh.dataset.g;render();return}
   if(e.target.closest('a,input,.detail'))return;
   var it=e.target.closest('[data-tap]');
-  if(it){expanded[it.dataset.tap]=!expanded[it.dataset.tap];render()}
-},true);
+  if(it)toggleItem(it.dataset.tap);
+});
 app.addEventListener('change',function(e){
   var id=e.target.dataset&&e.target.dataset.chk;if(!id)return;
-  var f=findItem(id);if(!f)return;
-  f.item.done=e.target.checked;changed();render();
+  done[id]=e.target.checked;lsSet(LS_DONE,done);render();
 });
 app.addEventListener('keydown',function(e){
-  var el=e.target.closest&&e.target.closest('[data-lp]');
-  if(!el||e.target!==el)return;
-  if(e.key==='Enter'&&el.dataset.tap){expanded[el.dataset.tap]=!expanded[el.dataset.tap];render();return}
-  if(e.key==='e'||e.key==='E'||e.key==='Enter'){e.preventDefault();openEditor(el.dataset.lp)}
+  var el=e.target;
+  if(el.dataset&&el.dataset.tap&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleItem(el.dataset.tap);var n=app.querySelector('[data-tap="'+el.dataset.tap+'"]');if(n)n.focus()}
 });
 document.addEventListener('keydown',function(e){
-  if(sheetOpen||/INPUT|TEXTAREA|SELECT/.test((e.target.tagName||'')))return;
-  if(e.key==='ArrowRight'||e.key==='ArrowLeft'){var i=state.pages.findIndex(function(p){return p.id===tab}),j=i+(e.key==='ArrowRight'?1:-1);if(j>=0&&j<state.pages.length)goTab(state.pages[j].id)}
+  if(/INPUT|TEXTAREA|SELECT/.test(e.target.tagName||''))return;
+  if(e.key==='ArrowRight'||e.key==='ArrowLeft'){var i=state.pages.indexOf(pageById(tab)),j=i+(e.key==='ArrowRight'?1:-1);if(j>=0&&j<state.pages.length)goTab(state.pages[j].id)}
 });
 
-/* ---------- editor sheet ---------- */
-var sheetOpen=false;
-function closeSheet(){var s=document.getElementById('sheet');if(s)s.remove();var c=document.getElementById('scrim');if(c)c.remove();sheetOpen=false;if(saveStatus==='dirty')scheduleSave()}
-function field(id,label,val,type,cls,ph,help){
-  var ctl;
-  if(type==='area')ctl='<textarea id="'+id+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+'>'+esc(val)+'</textarea>';
-  else ctl='<input id="'+id+'" type="'+(type==='url'?'url':'text')+'"'+(type==='url'?' inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false"':'')+(ph?' placeholder="'+esc(ph)+'"':'')+' value="'+esc(val)+'">';
-  return '<div class="f '+(cls||'')+'"><label for="'+id+'">'+label+'</label>'+ctl+(help?'<small>'+help+'</small>':'')+'</div>';
-}
-function groupOptions(selected){
-  var h='';
-  state.pages.forEach(function(p){
-    var pl=p.kind==='day'?p.date+' 週'+p.dow:'準備';
-    h+='<optgroup label="'+esc(pl)+'">'+p.groups.map(function(g){return '<option value="'+g.id+'"'+(g.id===selected?' selected':'')+'>'+esc(pl+'・'+g.label)+'</option>'}).join('')+'</optgroup>';
-  });
-  return h;
-}
-function openEditor(key){
-  if(sheetOpen)closeSheet();
-  var i=key.indexOf(':'), kind=key.slice(0,i), id=key.slice(i+1);
-  var h='', title='', ctx={kind:kind,id:id};
-  if(kind==='item'||kind==='new'){
-    var f=kind==='item'?findItem(id):null;
-    var it=f?f.item:{time:'',name:'',badge:'',sub:'',desc:'',ko:'',addr:'',ig:'',naver:'',links:[],note:''};
-    var gid=f?f.group.id:id;
-    title=f?'編輯行程':'新增行程';
-    h+='<div class="fields">'+field('e-time','時間',it.time,'','','例：10:00–11:30')+field('e-badge','標籤',it.badge,'','','例：必去、必約');
-    h+=field('e-name','名稱',it.name,'','full')+field('e-sub','小標',it.sub,'','full','例：午餐備案');
-    h+=field('e-ig','IG 連結',it.ig,'url','full','貼上 Reel、貼文或帳號網址');
-    h+=field('e-naver','NAVER 地圖連結',it.naver,'url','full','貼上 naver.me 或 map.naver.com 網址','沒填就用韓文名稱自動搜尋');
-    h+=field('e-ko','韓文名稱',it.ko,'','full')+field('e-addr','韓文地址',it.addr,'','full');
-    h+=field('e-desc','說明',it.desc,'area','full')+field('e-note','我的備註',it.note,'area','full');
-    h+=field('e-links','其他連結',linksToText(it.links),'area','full','預約 | https://…','一行一個，格式：名稱 | 網址');
-    h+=field('e-recs','推薦店家',recsToText(it.recs),'area','full','店名 | 說明 | NAVER 連結','一行一家，格式：店名 | 說明 | NAVER 連結（說明和連結可省略）');
-    h+='<div class="f full"><label for="e-group">放在</label><select id="e-group">'+groupOptions(gid)+'</select></div></div>';
-    h+='<div class="row">';
-    if(f)h+='<button class="btn" data-s="up"'+(f.idx===0?' disabled':'')+'>↑ 上移</button><button class="btn" data-s="down"'+(f.idx===f.group.items.length-1?' disabled':'')+'>↓ 下移</button><button class="btn danger" data-s="del">刪除</button>';
-    h+='<button class="btn primary" data-s="ok">'+(f?'完成':'新增')+'</button></div>';
-  }else if(kind==='page'){
-    var p=pageById(id);title=(p.kind==='day'?p.date:'準備')+' 頁面';
-    h+='<div class="fields">'+field('e-ptitle','標題',p.title,'','full');
-    if(p.kind==='day')h+=field('e-hotel','住宿',p.hotel,'','full')+field('e-remind','提醒',(p.remind||[]).join('\n'),'area','full','','一行一則')+field('e-trans','交通',(p.transport||[]).join('\n'),'area','full','','一行一則');
-    h+='</div><div class="row"><button class="btn primary" data-s="ok">完成</button></div>';
-  }else if(kind==='group'){
-    var fg=findGroup(id),g=fg.group;title='編輯區塊';
-    h+='<div class="fields">'+field('e-glabel','區塊名稱',g.label,'','full')+field('e-ghint','說明',g.hint,'area','full')+field('e-glinks','連結',linksToText(g.links),'area','full','','一行一個，格式：名稱 | 網址')+'</div>';
-    h+='<div class="row"><button class="btn primary" data-s="ok">完成</button></div>';
-  }
-  var scrim=document.createElement('div');scrim.className='scrim';scrim.id='scrim';
-  var sheet=document.createElement('div');sheet.className='sheet';sheet.id='sheet';sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','true');sheet.setAttribute('aria-label',title);
-  sheet.innerHTML='<div class="inner"><div class="grab"></div><h3>'+esc(title)+'</h3>'+h+'</div>';
-  document.body.appendChild(scrim);document.body.appendChild(sheet);sheetOpen=true;
-  scrim.addEventListener('click',closeSheet);
-  sheet.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet()});
-  if(kind==='new'){var n=document.getElementById('e-name');if(n)n.focus()}
-  sheet.addEventListener('click',function(e){
-    var b=e.target.closest('[data-s]');if(!b||b.disabled)return;
-    var s=b.dataset.s;
-    if(s==='del'&&!b.dataset.armed){b.dataset.armed='1';b.textContent='再按一次確認刪除';return}
-    applyEdit(ctx,s);
-  });
-}
-function v(id){var el=document.getElementById(id);return el?el.value.trim():''}
-function applyEdit(ctx,s){
-  var k=ctx.kind;
-  if(k==='item'||k==='new'){
-    var f=k==='item'?findItem(ctx.id):null;
-    if(f&&(s==='up'||s==='down')){var a=f.group.items,j=f.idx+(s==='up'?-1:1);var tmp=a[j];a[j]=a[f.idx];a[f.idx]=tmp;changed();render();openEditor('item:'+ctx.id);return}
-    if(f&&s==='del'){f.group.items.splice(f.idx,1);changed();closeSheet();render();toast('已刪除「'+f.item.name+'」');return}
-    var data={time:v('e-time'),badge:v('e-badge'),name:v('e-name')||'未命名',sub:v('e-sub'),ig:v('e-ig'),naver:v('e-naver'),ko:v('e-ko'),addr:v('e-addr'),desc:v('e-desc'),note:v('e-note'),links:textToLinks(document.getElementById('e-links').value),recs:textToRecs(document.getElementById('e-recs').value)};
-    var tg=findGroup(v('e-group'))||findGroup(f?f.group.id:ctx.id);
-    if(f){
-      Object.keys(data).forEach(function(x){f.item[x]=data[x]});
-      if(tg.group!==f.group){f.group.items.splice(f.idx,1);tg.group.items.push(f.item)}
-    }else{data.id=uid('i');data.done=false;tg.group.items.push(data);expanded[data.id]=true}
-    if(tg.page.id!==tab){tab=tg.page.id;saveUi()}
-  }else if(k==='page'){
-    var p=pageById(ctx.id);p.title=v('e-ptitle')||p.title;
-    if(p.kind==='day'){p.hotel=v('e-hotel');p.remind=lines(document.getElementById('e-remind').value);p.transport=lines(document.getElementById('e-trans').value)}
-  }else if(k==='group'){
-    var g=findGroup(ctx.id).group;g.label=v('e-glabel')||g.label;g.hint=v('e-ghint');g.links=textToLinks(document.getElementById('e-glinks').value);
-  }
-  changed();closeSheet();render();toast('已儲存');
-}
-var toastT=null;
-function toast(msg){var t=document.getElementById('toast');if(!t){t=document.createElement('div');t.className='toast';t.id='toast';t.setAttribute('role','status');document.body.appendChild(t)}t.textContent=msg;t.hidden=false;t.style.animation='none';void t.offsetWidth;t.style.animation='';clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true},2400)}
-
-/* ---------- saving ---------- */
-function changed(){
-  lsSet(LS_DRAFT,{baseRev:EMBED_REV,state:state});
-  saveStatus=mode==='remote'?'dirty':'local';renderStatus();
-  if(mode==='remote')scheduleSave();
-}
-function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(doSave,2500)}
-function buildDoc(next){
-  var json=JSON.stringify(next).replace(/</g,'\\u003c');
-  return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+RESET+'</style></head><body>'
-    +'<title>首爾六日行程</title>\n'
-    +document.getElementById('font-link').outerHTML+'\n'
-    +'<style id="app-style">'+document.getElementById('app-style').textContent+'</style>\n'
-    +'<div id="app"></div>\n'
-    +'<script type="application/json" id="trip-data">'+json+'<\/script>\n'
-    +'<script id="app-js">'+document.getElementById('app-js').textContent+'<\/script>'
-    +'</body></html>';
-}
-function goLocal(msg){mode='local';saveStatus='local';renderStatus();if(msg)toast(msg)}
-function doSave(){
-  if(sheetOpen||mode!=='remote')return;
-  var next=JSON.parse(JSON.stringify(state));
-  next.rev=EMBED_REV+1;next.updated=new Date().toISOString();
-  saveStatus='saving';renderStatus();
-  api.publish(buildDoc(next)).then(function(){
-    saveStatus='saved';renderStatus();
-  }).catch(function(err){
-    var c=(err&&err.code)||'upstream_error';
-    if(c==='conflict'){toast('別人剛更新了行程，正在載入最新版');return}
-    if(c==='rate_limited'){saveStatus='dirty';renderStatus();clearTimeout(saveTimer);saveTimer=setTimeout(doSave,15000);return}
-    if(c==='upstream_error'&&!retried){retried=true;saveStatus='dirty';renderStatus();clearTimeout(saveTimer);saveTimer=setTimeout(doSave,1000+Math.random()*1500);return}
-    if(['not_writer','not_granted','not_declared','consent_required','capability_disabled','capability_removed'].indexOf(c)>=0){goLocal('你只有檢視權限，修改只會存在這台裝置');return}
-    saveStatus='error';renderStatus();
-  });
-}
-
 render();
-var useP=window.claude&&typeof window.claude.use==='function'?window.claude.use('artifact'):Promise.resolve(null);
-Promise.resolve(useP).then(function(a){
-  if(!a){goLocal();return}
-  api=a;mode='remote';
-  if(saveStatus==='local')saveStatus='dirty';
-  renderStatus();
-  if(unsynced)scheduleSave();
-}).catch(function(){goLocal()});
-setInterval(function(){if(!sheetOpen&&document.visibilityState==='visible'&&isToday(pageById(tab)||{}))render()},60000);
+setInterval(function(){if(document.visibilityState==='visible'&&isToday(pageById(tab)||{}))render()},60000);
 })();
 </script>
 
