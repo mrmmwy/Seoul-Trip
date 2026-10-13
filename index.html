@@ -604,7 +604,16 @@ function appUrls(kind,url){
   path+='&appname='+enc(location.origin+location.pathname);
   return {ios:'nmap://'+path,android:'intent://'+path+'#Intent;scheme=nmap;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.nhn.android.nmap;'+fb};
 }
+// 動畫出任何意外：清掉畫面、照一般連結打開，不讓按鈕失靈
 function launchFx(a,e,kind){
+  try{launchFxRun(a,e,kind)}catch(err){
+    flying=false;undoFly=null;
+    [].forEach.call(document.querySelectorAll('.fly,.fxrail,.fxsheet,.puff'),function(x){x.remove()});
+    if(a.classList)a.classList.remove('launched');
+    if(e.defaultPrevented){var w=null;try{w=window.open(a.href,'_blank')}catch(_){}if(!w)location.href=a.href}
+  }
+}
+function launchFxRun(a,e,kind){
   if(flying)return;
   if(!a.animate||matchMedia('(prefers-reduced-motion: reduce)').matches)return; // 不支援或減少動態：照原本方式打開
   e.preventDefault();flying=true;
@@ -690,6 +699,7 @@ function launchFx(a,e,kind){
     var s=sheet;if(s){s.classList.remove('stuck');s.animate([{opacity:1},{opacity:0}],{duration:280,easing:'ease-out',fill:'forwards'});setTimeout(function(){s.remove()},320)}
   };
   undoFly=back;
+  setTimeout(function(){if(f.isConnected&&!(sheet&&sheet.classList.contains('stuck')))back()},9000); // 保險：9 秒還沒收尾就強制收回
   setTimeout(function(){
     document.addEventListener('visibilitychange',onVis);
     var t=appUrls(kind,url),au=t&&(IOS?t.ios:ANDROID?t.android:'');
