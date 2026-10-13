@@ -1,5 +1,5 @@
 // 離線快取：第一次打開時存下頁面，之後沒網路也能用
-const CACHE = 'seoul-trip-v47';
+const CACHE = 'seoul-trip-v48';
 const FONTS = 'seoul-trip-fonts'; // 字型另外存，App 改版時不用重新下載
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {
